@@ -46,4 +46,15 @@ class VArray extends BaseType
 
         return $this->addDescriptionToSchema($schema);
     }
+
+    protected function setParentsRecursively()
+    {
+        $this->schema->setParent($this);
+        $this->schema->setParentsRecursively();
+    }
+
+    public function getSchema(): BaseType
+    {
+        return $this->schema;
+    }
 }

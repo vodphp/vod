@@ -17,6 +17,8 @@ abstract class BaseType
 
     protected array $issues = [];
 
+    protected ?BaseType $parent = null;
+
     protected $default = null;
 
     protected ?string $description = null;
@@ -58,6 +60,7 @@ abstract class BaseType
      */
     public function parse(mixed $value)
     {
+        $this->setParentsRecursively();
         if ($this->isOptional() && $value === null) {
             return $this->empty();
         }
@@ -202,6 +205,19 @@ abstract class BaseType
         return $this;
     }
 
+
+
+    public function setParent(?BaseType $parent): self
+    {
+        $this->parent = $parent;
+        return $this;
+    }
+
+    public function getParent(): ?BaseType
+    {
+        return $this->parent;
+    }
+
     protected function addIssue(int $issueCode, BaseType $source, string $message)
     {
         $this->issues[] = [
@@ -220,6 +236,7 @@ abstract class BaseType
 
     public function toJsonSchema(): array
     {
+        $this->setParentsRecursively();
         $schema = $this->generateJsonSchema();
 
         if ($this->isOptional()) {
@@ -243,5 +260,10 @@ abstract class BaseType
         }
 
         return $schema;
+    }
+
+    protected function setParentsRecursively()
+    {
+        // Implement this method in child classes that have nested types
     }
 }

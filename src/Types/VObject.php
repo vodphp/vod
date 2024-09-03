@@ -10,13 +10,26 @@ use Spatie\TypeScriptTransformer\Structures\MissingSymbolsCollection;
 class VObject extends BaseType
 {
     protected array $schema;
-
+    protected array $definitions = [];
     /**
      * @param  array<string, BaseType<mixed>>  $schema
      * */
     public function __construct(array $schema)
     {
         $this->schema = $schema;
+        $this->setParentsRecursively();
+    }
+
+
+    public function define(string $name, BaseType $type)
+    {
+        $this->definitions[$name] = $type;
+        return $this;
+    }
+
+    public function getDefinition(string $name)
+    {
+        return $this->definitions[$name];
     }
 
     public function empty()
@@ -40,6 +53,7 @@ class VObject extends BaseType
 
     public function toTypeScript(MissingSymbolsCollection $collection): string
     {
+        $this->setParentsRecursively();
         $schema = [];
         foreach ($this->schema as $key => $type) {
             $part = "$key: {$type->toTypeScript($collection)}";
@@ -120,6 +134,7 @@ class VObject extends BaseType
 
     public function toJsonSchema(): array
     {
+        $this->setParentsRecursively();
         $schema = $this->generateJsonSchema();
 
         if ($this->isOptional()) {
@@ -150,7 +165,25 @@ class VObject extends BaseType
                 }
             }
         }
+        if ($this->definitions) {
+            foreach ($this->definitions as $name => $definition) {
+                $schema['$defs'][$name] = $definition->toJsonSchema();
+            }
+        }
 
         return $schema;
+    }
+
+    protected function setParentsRecursively()
+    {
+        foreach ($this->schema as $type) {
+            $type->setParent($this);
+            $type->setParentsRecursively();
+        }
+    }
+
+    public function getSchema(): array
+    {
+        return $this->schema;
     }
 }

@@ -13,12 +13,19 @@ use Vod\Vod\Types\VIntersection;
 use Vod\Vod\Types\VLiteral;
 use Vod\Vod\Types\VNumber;
 use Vod\Vod\Types\VObject;
+use Vod\Vod\Types\VRef;
 use Vod\Vod\Types\VString;
 use Vod\Vod\Types\VTuple;
 use Vod\Vod\Types\VUnion;
 
 class V
 {
+
+    public function ref(string $name)
+    {
+        return new VRef($name);
+    }
+
     public function string()
     {
         return new VString;
@@ -129,9 +136,12 @@ class V
         return new VEnum($values);
     }
 
-    public function toJsonSchema()
+    public function toJsonSchema(string $name, BaseType $schema)
     {
-        return $this->any()->toJsonSchema();
+        return [
+            'name' => $name,
+            'schema' => $schema->toJsonSchema()
+        ];
     }
 
     public function date()
