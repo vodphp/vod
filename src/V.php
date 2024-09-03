@@ -9,11 +9,13 @@ use Vod\Vod\Types\VBoolean;
 use Vod\Vod\Types\VDate;
 use Vod\Vod\Types\VDTO;
 use Vod\Vod\Types\VEnum;
+use Vod\Vod\Types\VIntersection;
 use Vod\Vod\Types\VLiteral;
 use Vod\Vod\Types\VNumber;
 use Vod\Vod\Types\VObject;
 use Vod\Vod\Types\VString;
 use Vod\Vod\Types\VTuple;
+use Vod\Vod\Types\VUnion;
 
 class V
 {
@@ -90,6 +92,25 @@ class V
         }
 
         return $this->object($inferredObject);
+    }
+
+    public function union(array $types)
+    {
+        return new VUnion($types);
+    }
+
+    public function allOf(array $types) {
+        return $this->intersection($types);
+    }
+
+    public function anyOf(array $types)
+    {
+        return $this->union($types);
+    }
+
+    public function intersection(array $types)
+    {
+        return new VIntersection($types);
     }
 
     public function object(array $schema)
