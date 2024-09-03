@@ -9,7 +9,6 @@ use Vod\Vod\Types\VBoolean;
 use Vod\Vod\Types\VDate;
 use Vod\Vod\Types\VDTO;
 use Vod\Vod\Types\VEnum;
-use Vod\Vod\Types\VLiteral;
 use Vod\Vod\Types\VNumber;
 use Vod\Vod\Types\VObject;
 use Vod\Vod\Types\VString;
@@ -20,11 +19,6 @@ class V
     public function string()
     {
         return new VString;
-    }
-
-    public function literal()
-    {
-        return new VLiteral;
     }
 
     public function dto(string $className)

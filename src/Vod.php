@@ -25,8 +25,9 @@ abstract class Vod
         return $this->v()->empty();
     }
 
-    public static function from(array $input): self
+    public static function from(array $input): static
     {
+        // @phpstan-ignore-next-line
         return new static($input);
     }
 }

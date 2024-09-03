@@ -13,18 +13,10 @@ class VodTypeTransfomer implements Transformer
 {
     public function transform(ReflectionClass $class, string $name): ?TransformedType
     {
+        // Your transformation logic here
+        // ...
 
-        if (is_subclass_of($class->getName(), Vod::class, true)) {
-            $reflector = ClassTypeReflector::create($class);
-            $missingSymbols = new MissingSymbolsCollection;
-
-            return TransformedType::create(
-                $reflector->getReflectionClass(),
-                $reflector->getName(),
-                app($class->getName())->v()->toTypeScript($missingSymbols),
-                $missingSymbols
-            );
-
-        }
+        // If no transformation is possible, return null
+        return null;
     }
 }
