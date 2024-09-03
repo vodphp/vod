@@ -25,24 +25,25 @@ class VArray extends BaseType
             return null;
         }
 
-        if (!is_array($value)) {
-            throw new Exception("Value is not an array");
+        if (! is_array($value)) {
+            throw new Exception('Value is not an array');
         }
 
-        return array_map(fn($item) => $this->schema->parse($item), $value);
+        return array_map(fn ($item) => $this->schema->parse($item), $value);
     }
 
     public function toTypeScript(MissingSymbolsCollection $missingSymbols): string
     {
-        return $this->schema->toTypeScript($missingSymbols) . '[]' . ($this->isOptional() ? ' | null' : '');
+        return $this->schema->toTypeScript($missingSymbols).'[]'.($this->isOptional() ? ' | null' : '');
     }
 
     protected function generateJsonSchema(): array
     {
         $itemSchema = $this->schema ? $this->schema->toJsonSchema() : [];
+
         return [
             'type' => 'array',
-            'items' => $itemSchema
+            'items' => $itemSchema,
         ];
     }
 }

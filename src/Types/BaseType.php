@@ -28,9 +28,8 @@ abstract class BaseType
         return is_null($this->default) ? null : $this->parse($this->default);
     }
 
-
     /**
-     * @param BaseType[] $types
+     * @param  BaseType[]  $types
      */
     public function or(...$types)
     {
@@ -38,7 +37,7 @@ abstract class BaseType
     }
 
     /**
-     * @param BaseType[] $types
+     * @param  BaseType[]  $types
      */
     public function and(...$types)
     {
@@ -203,7 +202,6 @@ abstract class BaseType
         ];
     }
 
-
     public function transform(Closure $transformer)
     {
         $this->after[] = ['transform', $transformer];
@@ -219,8 +217,8 @@ abstract class BaseType
             return [
                 'oneOf' => [
                     $schema,
-                    ['type' => 'null']
-                ]
+                    ['type' => 'null'],
+                ],
             ];
         }
 

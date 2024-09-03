@@ -4,7 +4,6 @@ namespace Vod\Vod\Types;
 
 use Exception;
 use Spatie\TypeScriptTransformer\Structures\MissingSymbolsCollection;
-use Spatie\TypeScriptTransformer\Types\BooleanType;
 
 /**
  * @extends BaseType<bool>
@@ -17,8 +16,8 @@ class VBoolean extends BaseType
             return null;
         }
 
-        if (!is_bool($value)) {
-            throw new Exception("Value is not a boolean");
+        if (! is_bool($value)) {
+            throw new Exception('Value is not a boolean');
         }
 
         return $value;
@@ -26,7 +25,7 @@ class VBoolean extends BaseType
 
     public function toTypeScript(MissingSymbolsCollection $collection): string
     {
-        return 'boolean' . ($this->isOptional() ? ' | null' : '');
+        return 'boolean'.($this->isOptional() ? ' | null' : '');
     }
 
     protected function generateJsonSchema(): array

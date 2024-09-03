@@ -13,7 +13,7 @@ class VNumber extends BaseType
 
     public function toTypeScript(MissingSymbolsCollection $collection): string
     {
-        return 'number' . ($this->isOptional() ? ' | null' : '');
+        return 'number'.($this->isOptional() ? ' | null' : '');
     }
 
     public function int(): self
@@ -47,6 +47,7 @@ class VNumber extends BaseType
         if (is_int($value)) {
             return (int) $value;
         }
+
         return (float) $value;
     }
 

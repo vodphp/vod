@@ -8,9 +8,8 @@ class VDate extends BaseType
 {
     public function toTypeScript(MissingSymbolsCollection $collection): string
     {
-        return 'string' . ($this->isOptional() ? ' | null' : '');
+        return 'string'.($this->isOptional() ? ' | null' : '');
     }
-
 
     //protected $default = '';
 

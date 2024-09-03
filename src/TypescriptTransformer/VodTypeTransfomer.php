@@ -1,4 +1,5 @@
 <?php
+
 namespace Vod\Vod\TypescriptTransformer;
 
 use ReflectionClass;
@@ -8,14 +9,14 @@ use Spatie\TypeScriptTransformer\Transformers\Transformer;
 use Spatie\TypeScriptTransformer\TypeReflectors\ClassTypeReflector;
 use Vod\Vod\Vod;
 
-class VodTypeTransfomer implements Transformer {
-
+class VodTypeTransfomer implements Transformer
+{
     public function transform(ReflectionClass $class, string $name): ?TransformedType
     {
 
         if (is_subclass_of($class->getName(), Vod::class, true)) {
             $reflector = ClassTypeReflector::create($class);
-            $missingSymbols = new MissingSymbolsCollection();
+            $missingSymbols = new MissingSymbolsCollection;
 
             return TransformedType::create(
                 $reflector->getReflectionClass(),

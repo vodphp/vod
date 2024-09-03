@@ -36,7 +36,7 @@ class VString extends BaseType
 
     public function toTypeScript(MissingSymbolsCollection $collection): string
     {
-        return 'string' . ($this->isOptional() ? ' | null' : '');
+        return 'string'.($this->isOptional() ? ' | null' : '');
     }
 
     public function toJsonSchema(): array

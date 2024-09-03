@@ -2,9 +2,8 @@
 
 namespace Vod\Vod\Tests;
 
-use Illuminate\Database\Eloquent\Factories\Factory;
-use Vod\Vod\VodServiceProvider;
 use Orchestra\Testbench\TestCase as Orchestra;
+use Vod\Vod\VodServiceProvider;
 
 class TestCase extends Orchestra
 {

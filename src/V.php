@@ -6,6 +6,7 @@ use Vod\Vod\Types\BaseType;
 use Vod\Vod\Types\VAny;
 use Vod\Vod\Types\VArray;
 use Vod\Vod\Types\VBoolean;
+use Vod\Vod\Types\VDate;
 use Vod\Vod\Types\VDTO;
 use Vod\Vod\Types\VEnum;
 use Vod\Vod\Types\VLiteral;
@@ -13,18 +14,17 @@ use Vod\Vod\Types\VNumber;
 use Vod\Vod\Types\VObject;
 use Vod\Vod\Types\VString;
 use Vod\Vod\Types\VTuple;
-use Vod\Vod\Types\VDate;
 
 class V
 {
     public function string()
     {
-        return new VString();
+        return new VString;
     }
 
     public function literal()
     {
-        return new VLiteral();
+        return new VLiteral;
     }
 
     public function dto(string $className)
@@ -34,23 +34,22 @@ class V
 
     public function number()
     {
-        return new VNumber();
+        return new VNumber;
     }
 
     public function boolean()
     {
-        return new VBoolean();
+        return new VBoolean;
     }
 
-
-    public function array(BaseType $schema = null)
+    public function array(?BaseType $schema = null)
     {
         return new VArray($schema ?? $this->any());
     }
 
     public function any()
     {
-        return new VAny();
+        return new VAny;
     }
 
     public function infer(mixed $type)
@@ -78,7 +77,7 @@ class V
                 return $type;
             }
 
-            if (is_subclass_of($type,  '\Spatie\LaravelData\Data')) {
+            if (is_subclass_of($type, '\Spatie\LaravelData\Data')) {
                 return $this->dto(get_class($type));
             }
 
@@ -98,7 +97,6 @@ class V
         return $this->object($inferredObject);
     }
 
-
     public function object(array $schema)
     {
         return new VObject($schema);
@@ -116,7 +114,7 @@ class V
 
     public function date()
     {
-        return new VDate();
+        return new VDate;
     }
 
     public function tuple(array $types)

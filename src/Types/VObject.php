@@ -2,10 +2,7 @@
 
 namespace Vod\Vod\Types;
 
-use Exception;
 use Spatie\TypeScriptTransformer\Structures\MissingSymbolsCollection;
-use Spatie\TypeScriptTransformer\Types\ObjectType;
-use Spatie\TypeScriptTransformer\Types\ObjectProperty;
 
 /**
  * @extends BaseType<mixed>
@@ -49,7 +46,7 @@ class VObject extends BaseType
             $schema[] = $part;
         }
 
-        return '{ '.implode('; ', $schema).'; }' . ($this->isOptional() ? ' | null' : '');
+        return '{ '.implode('; ', $schema).'; }'.($this->isOptional() ? ' | null' : '');
     }
 
     public function parseValueForType($value, BaseType $context)
@@ -77,6 +74,7 @@ class VObject extends BaseType
                 }
 
                 $parsedValue[$key] = $type->empty();
+
                 continue;
             }
             $results = $type->safeParse($value[$key], $key);
@@ -103,7 +101,7 @@ class VObject extends BaseType
             $propertySchema = $type->toJsonSchema();
             $properties[$key] = $propertySchema;
 
-            if (!$type->isOptional()) {
+            if (! $type->isOptional()) {
                 $required[] = $key;
             }
         }
@@ -113,7 +111,7 @@ class VObject extends BaseType
             'properties' => $properties,
         ];
 
-        if (!empty($required)) {
+        if (! empty($required)) {
             $schema['required'] = $required;
         }
 

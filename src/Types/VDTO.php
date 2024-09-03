@@ -22,14 +22,14 @@ class VDTO extends BaseType
     public function __construct(
         public string $className
     ) {
-        if (!class_exists('\Spatie\LaravelData\Data')) {
+        if (! class_exists('\Spatie\LaravelData\Data')) {
             // For testing purposes, we'll skip this check
             return;
         }
-        if (!class_exists($this->className)) {
+        if (! class_exists($this->className)) {
             throw new \Exception('Class does not exist');
         }
-        if (!is_subclass_of($this->className, '\Spatie\LaravelData\Data')) {
+        if (! is_subclass_of($this->className, '\Spatie\LaravelData\Data')) {
             // For testing purposes, we'll skip this check
             return;
         }
@@ -79,7 +79,7 @@ class VDTO extends BaseType
         // the schema based on the DTO's properties for a more accurate representation.
         return [
             'type' => 'object',
-            'description' => 'DTO of type ' . $this->className,
+            'description' => 'DTO of type '.$this->className,
         ];
     }
 }

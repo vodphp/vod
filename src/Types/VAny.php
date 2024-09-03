@@ -28,5 +28,4 @@ class VAny extends BaseType
     {
         return [];  // An empty schema allows any type
     }
-
 }

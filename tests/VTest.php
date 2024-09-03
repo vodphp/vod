@@ -2,11 +2,11 @@
 
 use Vod\Vod\Types\VArray;
 use Vod\Vod\Types\VBoolean;
-use Vod\Vod\Types\VDiscriminatedUnion;
 use Vod\Vod\Types\VNumber;
 use Vod\Vod\Types\VObject;
 use Vod\Vod\Types\VString;
 use Vod\Vod\V;
+
 use function Vod\Vod\v;
 
 it('V()', function () {
@@ -19,7 +19,7 @@ it('V can infer types', function () {
     expect(v()->infer(true))->toBeInstanceOf(VBoolean::class);
     expect(v()->infer([]))->toBeInstanceOf(VObject::class);
     expect(v()->infer([1, 2, 3]))->toBeInstanceOf(VArray::class);
-    expect(v()->infer(new stdClass()))->toBeInstanceOf(VObject::class);
+    expect(v()->infer(new stdClass))->toBeInstanceOf(VObject::class);
     expect(v()->infer(['a' => 1, 'b' => 2]))->toBeInstanceOf(VObject::class);
 });
 
@@ -65,8 +65,8 @@ it('can generate JSON schema for OpenAI with optional fields', function () {
                         'type' => 'array',
                         'items' => ['type' => 'string'],
                     ],
-                    ['type' => 'null']
-                ]
+                    ['type' => 'null'],
+                ],
             ],
             'address' => [
                 'oneOf' => [
@@ -78,14 +78,14 @@ it('can generate JSON schema for OpenAI with optional fields', function () {
                             'zip' => [
                                 'oneOf' => [
                                     ['type' => 'string'],
-                                    ['type' => 'null']
-                                ]
+                                    ['type' => 'null'],
+                                ],
                             ],
                         ],
-                        'required' => ['street', 'city']
+                        'required' => ['street', 'city'],
                     ],
-                    ['type' => 'null']
-                ]
+                    ['type' => 'null'],
+                ],
             ],
         ],
         'required' => ['name', 'age', 'is_student'],

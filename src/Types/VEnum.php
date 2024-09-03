@@ -3,7 +3,6 @@
 namespace Vod\Vod\Types;
 
 use Exception;
-use Spatie\TypeScriptTransformer\Types\UnionType;
 use Spatie\TypeScriptTransformer\Structures\MissingSymbolsCollection;
 
 /**
@@ -20,9 +19,10 @@ class VEnum extends BaseType
 
     public function parseValueForType($value, BaseType $context)
     {
-        if (!in_array($value, $this->values, true)) {
-           throw new Exception("Value is not a valid enum member");
+        if (! in_array($value, $this->values, true)) {
+            throw new Exception('Value is not a valid enum member');
         }
+
         return $value;
     }
 
@@ -35,10 +35,11 @@ class VEnum extends BaseType
             if (is_bool($value)) {
                 return $value ? 'true' : 'false';
             }
+
             return $value;
         }, $this->values);
 
-        return implode(' | ', $values) . ($this->isOptional() ? ' | null' : '');
+        return implode(' | ', $values).($this->isOptional() ? ' | null' : '');
     }
 
     protected function generateJsonSchema(): array

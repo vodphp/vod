@@ -7,16 +7,13 @@ use Spatie\TypeScriptTransformer\Structures\MissingSymbolsCollection;
 class VUnion extends BaseType
 {
     /**
-     * @param BaseType[] $types
+     * @param  BaseType[]  $types
      */
-    public function __construct(public array $types)
-    {
-
-    }
+    public function __construct(public array $types) {}
 
     public function toTypeScript(MissingSymbolsCollection $collection): string
     {
-        return '(' . implode(' | ', array_map(fn (BaseType $type) => $type->toTypeScript($collection), $this->types)) . ')' . ($this->isOptional() ? ' | null' : '');
+        return '('.implode(' | ', array_map(fn (BaseType $type) => $type->toTypeScript($collection), $this->types)).')'.($this->isOptional() ? ' | null' : '');
     }
 
     public function parseValueForType($value, BaseType $context)
@@ -34,7 +31,7 @@ class VUnion extends BaseType
     protected function generateJsonSchema(): array
     {
         return [
-            'oneOf' => array_map(fn(BaseType $type) => $type->toJsonSchema(), $this->types),
+            'oneOf' => array_map(fn (BaseType $type) => $type->toJsonSchema(), $this->types),
         ];
     }
 }
