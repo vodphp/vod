@@ -33,6 +33,6 @@ it('VRef can be created', function () {
         ],
     ]))->toBeArray()->toHaveLength(2);
 
-    expect($root->toTypeScript(new MissingSymbolsCollection, 'Root'))->toBe("export type Root = { exampleOfRef: ref01; blocks: { test: string; exampleOfRef: ref01; }[]; }". PHP_EOL . "export type ref01 = { hello: string; world: number; };");
+    expect($root->toTypeScript(new MissingSymbolsCollection, 'Root'))->toBe('export type Root = { exampleOfRef: ref01; blocks: { test: string; exampleOfRef: ref01; }[]; }'.PHP_EOL.'export type ref01 = { hello: string; world: number; };');
 
 });
