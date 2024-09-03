@@ -63,41 +63,7 @@ Vod supports various types:
 - `v()->intersection()`: Intersection type
 - `v()->all()`: Alias of Intersection type
 
-### Optional Fields
 
-Make fields optional:
-
-```php
-@src @tests 
-
-read the source code and write documentation in this README.md on how to use Vod
-
-Certainly! I'll add documentation to the README.md file on how to use Vod based on the source code provided. Here's the updated README.md with usage instructions:
-bash
-composer require deanmcpherson/vod
-## Usage
-
-### Basic Schema Creation
-
-To create a schema, use the `v()` function to access the Vod API:
-
-php
-use function Vod\Vod\v;
-$schema = v()->object([
-'name' => v()->string(),
-'age' => v()->number()->int(),
-'email' => v()->string()->optional(),
-]);
-### Parsing Data
-
-You can parse data against your schema:
-php
-$data = [
-'name' => 'John Doe',
-'age' => 30,
-'email' => 'john@example.com',
-];
-$result = $schema->parse($data);
 ### Optional Fields
 
 Make fields optional:
@@ -135,7 +101,7 @@ $schema = v()->object([
 ]);
 ```
 
-### Adding Definitions
+### Adding and referencing definitions
 
 Add definitions to your schema for reusable components:
 
