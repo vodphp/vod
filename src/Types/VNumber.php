@@ -53,11 +53,12 @@ class VNumber extends BaseType
 
     protected function generateJsonSchema(): array
     {
-        return ['type' => $this->isInt ? 'integer' : 'number'];
+        $schema = ['type' => $this->isInt ? 'integer' : 'number'];
+        return $this->addDescriptionToSchema($schema);
     }
 
     public function toJsonSchema(): array
     {
-        return ['type' => $this->isInt ? 'integer' : 'number'];
+        return $this->generateJsonSchema();
     }
 }

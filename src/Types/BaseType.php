@@ -19,6 +19,7 @@ abstract class BaseType
 
     protected $default = null;
 
+    protected ?string $description = null;
     protected bool $isOptional = false;
 
     abstract protected function parseValueForType(mixed $value, BaseType $context);
@@ -27,6 +28,7 @@ abstract class BaseType
     {
         return is_null($this->default) ? null : $this->parse($this->default);
     }
+
 
     /**
      * @param  BaseType[]  $types
@@ -42,6 +44,12 @@ abstract class BaseType
     public function and(...$types)
     {
         return new VIntersection([$this, ...$types]);
+    }
+
+    public function description(string $description): self
+    {
+        $this->description = $description;
+        return $this;
     }
 
     /**
@@ -226,4 +234,12 @@ abstract class BaseType
     }
 
     abstract protected function generateJsonSchema(): array;
+
+    protected function addDescriptionToSchema(array $schema): array
+    {
+        if ($this->description !== null) {
+            $schema['description'] = $this->description;
+        }
+        return $schema;
+    }
 }

@@ -46,6 +46,7 @@ class VString extends BaseType
 
     protected function generateJsonSchema(): array
     {
-        return ['type' => 'string'];
+        $schema = ['type' => 'string'];
+        return $this->addDescriptionToSchema($schema);
     }
 }

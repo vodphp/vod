@@ -115,11 +115,42 @@ class VObject extends BaseType
             $schema['required'] = $required;
         }
 
-        return $schema;
+        return $this->addDescriptionToSchema($schema);
     }
 
     public function toJsonSchema(): array
     {
-        return parent::toJsonSchema();
+        $schema = $this->generateJsonSchema();
+
+        if ($this->isOptional()) {
+            return [
+                'oneOf' => [
+                    $this->addDescriptionToSchema($schema),
+                    ['type' => 'null'],
+                ],
+            ];
+        }
+
+        return $schema;
+    }
+
+    protected function addDescriptionToSchema(array $schema): array
+    {
+        $schema = parent::addDescriptionToSchema($schema);
+
+        // Add descriptions to nested properties
+        if (isset($schema['properties'])) {
+            foreach ($schema['properties'] as $key => $property) {
+                if (isset($property['oneOf'])) {
+                    foreach ($property['oneOf'] as &$option) {
+                        if (isset($option['type']) && $option['type'] === 'object') {
+                            $option = $this->schema[$key]->addDescriptionToSchema($option);
+                        }
+                    }
+                }
+            }
+        }
+
+        return $schema;
     }
 }

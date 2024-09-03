@@ -228,3 +228,60 @@ it('can generate JSON schema for complex nested structures', function () {
         'required' => ['name', 'age', 'tags', 'metadata'],
     ]);
 });
+
+it('can generate JSON schema with descriptions', function () {
+    $schema = v()->object([
+        'name' => v()->string()->description('The user\'s full name'),
+        'age' => v()->number()->int()->description('The user\'s age in years'),
+        'is_student' => v()->boolean()->description('Whether the user is a student'),
+        'hobbies' => v()->array(v()->string())->optional()->description('List of user\'s hobbies'),
+        'address' => v()->object([
+            'street' => v()->string()->description('Street name and number'),
+            'city' => v()->string()->description('City name'),
+            'zip' => v()->string()->optional()->description('Postal code'),
+        ])->optional()->description('User\'s address information'),
+    ])->description('User information schema');
+
+    $expectedJsonSchema = [
+        'type' => 'object',
+        'properties' => [
+            'name' => ['type' => 'string', 'description' => 'The user\'s full name'],
+            'age' => ['type' => 'integer', 'description' => 'The user\'s age in years'],
+            'is_student' => ['type' => 'boolean', 'description' => 'Whether the user is a student'],
+            'hobbies' => [
+                'oneOf' => [
+                    [
+                        'type' => 'array',
+                        'items' => ['type' => 'string'],
+                        'description' => 'List of user\'s hobbies',
+                    ],
+                    ['type' => 'null'],
+                ],
+            ],
+            'address' => [
+                'oneOf' => [
+                    [
+                        'type' => 'object',
+                        'properties' => [
+                            'street' => ['type' => 'string', 'description' => 'Street name and number'],
+                            'city' => ['type' => 'string', 'description' => 'City name'],
+                            'zip' => [
+                                'oneOf' => [
+                                    ['type' => 'string', 'description' => 'Postal code'],
+                                    ['type' => 'null'],
+                                ],
+                            ],
+                        ],
+                        'required' => ['street', 'city'],
+                        'description' => 'User\'s address information',
+                    ],
+                    ['type' => 'null'],
+                ],
+            ],
+        ],
+        'required' => ['name', 'age', 'is_student'],
+        'description' => 'User information schema',
+    ];
+
+    expect($schema->toJsonSchema())->toBe($expectedJsonSchema);
+});
