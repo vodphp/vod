@@ -31,6 +31,7 @@ class VBoolean extends BaseType
     protected function generateJsonSchema(): array
     {
         $schema = ['type' => 'boolean'];
+
         return $this->addDescriptionToSchema($schema);
     }
 }

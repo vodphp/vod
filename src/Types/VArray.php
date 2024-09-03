@@ -43,6 +43,7 @@ class VArray extends BaseType
             'type' => 'array',
             'items' => $this->schema->toJsonSchema(),
         ];
+
         return $this->addDescriptionToSchema($schema);
     }
 }
