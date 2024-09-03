@@ -53,16 +53,31 @@ class VObject extends BaseType
         return $empty;
     }
 
-    public function toTypeScript(MissingSymbolsCollection $collection): string
+    public function toTypeScript(MissingSymbolsCollection $collection, ?string $name = null): string
     {
         $this->setParentsRecursively();
         $schema = [];
         foreach ($this->schema as $key => $type) {
-            $part = "$key: {$type->toTypeScript($collection)}";
+            if ($type instanceof VRef) {
+                $part = "$key: {$type->getName()}";
+            } else {
+                $part = "$key: {$type->toTypeScript($collection)}";
+            }
             $schema[] = $part;
         }
+        $ts = "";
+        if ($name && !$this->getParent()) {
+            $ts .= "export type {$name} = ";
+        }
 
-        return '{ '.implode('; ', $schema).'; }'.($this->isOptional() ? ' | null' : '');
+        $ts .= '{ '.implode('; ', $schema).'; }'.($this->isOptional() ? ' | null' : '');
+        //Only root object can have definitions
+        if (!$this->getParent()) {
+            foreach ($this->definitions as $name => $definition) {
+                $ts .= PHP_EOL . "export type {$name} = {$definition->toTypeScript($collection)};\n";
+            }
+        }
+        return $ts;
     }
 
     public function parseValueForType($value, BaseType $context)
@@ -181,6 +196,10 @@ class VObject extends BaseType
         foreach ($this->schema as $type) {
             $type->setParent($this);
             $type->setParentsRecursively();
+        }
+        foreach ($this->definitions as $definition) {
+            $definition->setParent($this);
+            $definition->setParentsRecursively();
         }
     }
 

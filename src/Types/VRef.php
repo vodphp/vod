@@ -13,6 +13,7 @@ class VRef extends BaseType
 
     public function getStore(): ?VObject
     {
+
         $parent = $this->getParent();
         $topStore = null;
         while ($parent !== null) {
@@ -43,6 +44,11 @@ class VRef extends BaseType
         }
 
         return $store->getDefinition($this->refName)->parseValueForType($value, $context);
+    }
+
+    public function getName(): string
+    {
+        return $this->refName;
     }
 
     public function toJsonSchema(): array
