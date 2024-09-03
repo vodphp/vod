@@ -29,9 +29,9 @@ class VObject extends BaseType
         return $this;
     }
 
-    public function getDefinition(string $name)
+    public function getDefinition(string $name): ?BaseType
     {
-        return $this->definitions[$name];
+        return $this->definitions[$name] ?? null;
     }
 
     public function empty()
