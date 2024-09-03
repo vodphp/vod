@@ -6,9 +6,7 @@ use Spatie\TypeScriptTransformer\Structures\MissingSymbolsCollection;
 
 class VLiteral extends BaseType
 {
-    public function __construct(protected string $value)
-    {
-    }
+    public function __construct(protected string $value) {}
 
     public function toTypeScript(MissingSymbolsCollection $collection): string
     {
@@ -20,7 +18,7 @@ class VLiteral extends BaseType
     public function parseValueForType($value, BaseType $context)
     {
         if ($value !== $this->value) {
-            throw new \Exception('Value is not ' . $this->value);
+            throw new \Exception('Value is not '.$this->value);
         }
 
         return $value;
