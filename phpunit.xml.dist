@@ -16,7 +16,7 @@
     backupStaticProperties="false"
 >
     <testsuites>
-        <testsuite name="Laramix Test Suite">
+        <testsuite name="Vod Test Suite">
             <directory>tests</directory>
         </testsuite>
     </testsuites>

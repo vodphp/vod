@@ -22,9 +22,6 @@ class TestCase extends Orchestra
     public function getEnvironmentSetUp($app)
     {
 
-        /*
-        $migration = include __DIR__.'/../database/migrations/create_laramix_table.php.stub';
-        $migration->up();
-        */
+
     }
 }

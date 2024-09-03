@@ -1,3 +1,3 @@
 # Changelog
 
-All notable changes to `Laramix` will be documented in this file.
+All notable changes to `Vod` will be documented in this file.
