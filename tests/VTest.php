@@ -23,6 +23,11 @@ it('V can infer types', function () {
     expect(v()->infer(['a' => 1, 'b' => 2]))->toBeInstanceOf(VObject::class);
 });
 
+it('can add a rule', function() {
+    expect(v()->string()->rules(['email'])->parse('dean@example.com'))->toBe('dean@example.com');
+    expect(fn() => v()->string()->rules('email')->parse('not an email'))->toThrow(Exception::class);
+});
+
 it('V can parse values', function () {
     expect(v()->string()->parse('hello'))->toBe('hello');
     expect(v()->number()->parse(123))->toBe(123);

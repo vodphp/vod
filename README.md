@@ -81,24 +81,13 @@ v()->string()->default('default value')
 Note that default values are only used currently if the field is not provided data AND is optional.
 
 
-### Nested Structures
+### Using Rules
 
-Create complex nested structures:
+If you are using inside of Laravel, you can use the `rules` method to add rules to your schema. This relies on the Laravel Validator facade, so will only work if it is available.
 
 ```php
-$schema = v()->object([
-    'user' => v()->object([
-    'name' => v()->string(),
-    'address' => v()->object([
-        'street' => v()->string(),
-        'city' => v()->string(),
-    ]),
-    ]),
-    'orders' => v()->array(v()->object([
-        'id' => v()->number(),
-        'items' => v()->array(v()->string()),
-    ])),
-]);
+  v()->string()->rules('email')->parse('not an email') // throws an exception
+  v()->string()->rules('email')->parse('dean@example.com') // returns dean@example.com
 ```
 
 ### Adding and referencing definitions
