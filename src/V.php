@@ -99,7 +99,8 @@ class V
         return new VUnion($types);
     }
 
-    public function allOf(array $types) {
+    public function allOf(array $types)
+    {
         return $this->intersection($types);
     }
 
