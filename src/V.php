@@ -20,7 +20,6 @@ use Vod\Vod\Types\VUnion;
 
 class V
 {
-
     public function ref(string $name)
     {
         return new VRef($name);
@@ -140,7 +139,7 @@ class V
     {
         return [
             'name' => $name,
-            'schema' => $schema->toJsonSchema()
+            'schema' => $schema->toJsonSchema(),
         ];
     }
 

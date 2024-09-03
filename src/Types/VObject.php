@@ -10,7 +10,9 @@ use Spatie\TypeScriptTransformer\Structures\MissingSymbolsCollection;
 class VObject extends BaseType
 {
     protected array $schema;
+
     protected array $definitions = [];
+
     /**
      * @param  array<string, BaseType<mixed>>  $schema
      * */
@@ -20,10 +22,10 @@ class VObject extends BaseType
         $this->setParentsRecursively();
     }
 
-
     public function define(string $name, BaseType $type)
     {
         $this->definitions[$name] = $type;
+
         return $this;
     }
 

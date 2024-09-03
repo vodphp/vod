@@ -3,18 +3,13 @@
 namespace Vod\Vod\Types;
 
 use Spatie\TypeScriptTransformer\Structures\MissingSymbolsCollection;
-use Vod\Vod\V;
 
 /**
  *  extends BaseType<mixed>
  */
 class VRef extends BaseType
 {
-
-
-    public function __construct(protected string $refName)
-    {
-    }
+    public function __construct(protected string $refName) {}
 
     public function getStore(): ?VObject
     {
@@ -26,6 +21,7 @@ class VRef extends BaseType
             }
             $parent = $parent->getParent();
         }
+
         return $topStore;
     }
 
@@ -35,6 +31,7 @@ class VRef extends BaseType
         if ($store === null) {
             throw new \Exception("Store is not set for VRef '{$this->refName}'");
         }
+
         return $store->getDefinition($this->refName)->toTypeScript($collection);
     }
 
@@ -44,6 +41,7 @@ class VRef extends BaseType
         if ($store === null) {
             throw new \Exception("Store is not set for VRef '{$this->refName}'");
         }
+
         return $store->getDefinition($this->refName)->parseValueForType($value, $context);
     }
 

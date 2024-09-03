@@ -12,10 +12,10 @@ it('VRef can be created', function () {
             'exampleOfRef' => v()->ref('ref01'),
         ])),
     ])
-    ->define('ref01', v()->object([
-        'hello' => v()->string(),
-        'world' => v()->number(),
-    ]));
+        ->define('ref01', v()->object([
+            'hello' => v()->string(),
+            'world' => v()->number(),
+        ]));
 
     expect($root->parse([
         'exampleOfRef' => [
@@ -28,9 +28,9 @@ it('VRef can be created', function () {
                 'exampleOfRef' => [
                     'hello' => 'world',
                     'world' => 123,
-                ]
-            ]
-        ]
+                ],
+            ],
+        ],
     ]))->toBeArray()->toHaveLength(2);
 
     expect($root->toTypeScript(new MissingSymbolsCollection))->toBe('{ exampleOfRef: { hello: string; world: number; }; blocks: { test: string; exampleOfRef: { hello: string; world: number; }; }[]; }');

@@ -205,11 +205,10 @@ abstract class BaseType
         return $this;
     }
 
-
-
     public function setParent(?BaseType $parent): self
     {
         $this->parent = $parent;
+
         return $this;
     }
 
