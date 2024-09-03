@@ -74,7 +74,7 @@ class VObject extends BaseType
         //Only root object can have definitions
         if (! $this->getParent()) {
             foreach ($this->definitions as $name => $definition) {
-                $ts .= PHP_EOL."export type {$name} = {$definition->toTypeScript($collection)};\n";
+                $ts .= PHP_EOL."export type {$name} = {$definition->toTypeScript($collection)};";
             }
         }
 
