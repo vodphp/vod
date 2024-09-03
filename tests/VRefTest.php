@@ -37,15 +37,14 @@ it('VRef can be created', function () {
 
 });
 
-
 it('VRef can reference through an array', function () {
     $root = v()->object([
         'exampleOfRef' => v()->ref('ref01')->array(),
     ])
-    ->define('ref01', v()->object([
-        'hello' => v()->string(),
-        'world' => v()->number(),
-    ]));
+        ->define('ref01', v()->object([
+            'hello' => v()->string(),
+            'world' => v()->number(),
+        ]));
 
     expect($root->toTypeScript(new MissingSymbolsCollection, 'Root'))->toBe('export type Root = { exampleOfRef: ref01[]; }'.PHP_EOL.'export type ref01 = { hello: string; world: number; };');
 

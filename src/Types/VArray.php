@@ -35,7 +35,7 @@ class VArray extends BaseType
     public function toTypeScript(MissingSymbolsCollection $missingSymbols): string
     {
         if ($this->schema instanceof VRef) {
-            return $this->schema->getName() .'[]'.($this->isOptional() ? ' | null' : '');
+            return $this->schema->getName().'[]'.($this->isOptional() ? ' | null' : '');
         }
 
         return $this->schema->toTypeScript($missingSymbols).'[]'.($this->isOptional() ? ' | null' : '');
