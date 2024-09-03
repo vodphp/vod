@@ -65,18 +65,19 @@ class VObject extends BaseType
             }
             $schema[] = $part;
         }
-        $ts = "";
-        if ($name && !$this->getParent()) {
+        $ts = '';
+        if ($name && ! $this->getParent()) {
             $ts .= "export type {$name} = ";
         }
 
         $ts .= '{ '.implode('; ', $schema).'; }'.($this->isOptional() ? ' | null' : '');
         //Only root object can have definitions
-        if (!$this->getParent()) {
+        if (! $this->getParent()) {
             foreach ($this->definitions as $name => $definition) {
-                $ts .= PHP_EOL . "export type {$name} = {$definition->toTypeScript($collection)};\n";
+                $ts .= PHP_EOL."export type {$name} = {$definition->toTypeScript($collection)};\n";
             }
         }
+
         return $ts;
     }
 
