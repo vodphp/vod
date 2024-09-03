@@ -9,6 +9,7 @@ use Vod\Vod\Types\VBoolean;
 use Vod\Vod\Types\VDate;
 use Vod\Vod\Types\VDTO;
 use Vod\Vod\Types\VEnum;
+use Vod\Vod\Types\VLiteral;
 use Vod\Vod\Types\VNumber;
 use Vod\Vod\Types\VObject;
 use Vod\Vod\Types\VString;
@@ -94,6 +95,11 @@ class V
     public function object(array $schema)
     {
         return new VObject($schema);
+    }
+
+    public function literal(string $value)
+    {
+        return new VLiteral($value);
     }
 
     public function enum(array $values)
