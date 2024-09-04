@@ -4,6 +4,7 @@ namespace Vod\Vod\Types;
 
 use Exception;
 use Spatie\TypeScriptTransformer\Structures\MissingSymbolsCollection;
+use Vod\Vod\Exceptions\VParseException;
 
 /**
  * @extends BaseType<mixed>
@@ -20,7 +21,7 @@ class VEnum extends BaseType
     public function parseValueForType($value, BaseType $context)
     {
         if (! in_array($value, $this->values, true)) {
-            throw new Exception('Value is not a valid enum member');
+            VParseException::throw('Value is not a valid enum member', $this, $value);
         }
 
         return $value;

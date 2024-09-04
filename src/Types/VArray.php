@@ -4,6 +4,7 @@ namespace Vod\Vod\Types;
 
 use Exception;
 use Spatie\TypeScriptTransformer\Structures\MissingSymbolsCollection;
+use Vod\Vod\Exceptions\VParseException;
 
 /**
  * @template T
@@ -26,7 +27,7 @@ class VArray extends BaseType
         }
 
         if (! is_array($value)) {
-            throw new Exception('Value is not an array');
+            VParseException::throw('Value is not an array', $this, $value);
         }
 
         return array_map(fn ($item) => $this->schema->parse($item), $value);

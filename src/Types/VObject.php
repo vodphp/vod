@@ -3,6 +3,7 @@
 namespace Vod\Vod\Types;
 
 use Spatie\TypeScriptTransformer\Structures\MissingSymbolsCollection;
+use Vod\Vod\Exceptions\VParseException;
 
 /**
  * @extends BaseType<mixed>
@@ -85,24 +86,24 @@ class VObject extends BaseType
     {
 
         if (! is_array($value)) {
-            $context->addIssue(0, $this, 'Not an object');
+            VParseException::throw('Value is not an object', $this, $value);
 
             return;
         }
 
         foreach ($this->schema as $key => $type) {
             if (! is_string($key)) {
-                throw new \Exception('Keys must be strings');
+                VParseException::throw('Keys must be strings', $this, $value);
             }
             if (! ($type instanceof BaseType)) {
-                throw new \Exception('Schema values inherit from the BaseType');
+                VParseException::throw('Schema values inherit from the BaseType', $this, $value);
             }
         }
         $parsedValue = [];
         foreach ($this->schema as $key => $type) {
             if (! array_key_exists($key, $value)) {
                 if (! $type->isOptional()) {
-                    $context->addIssue(0, $this, "Required object key  \"$key\" not found");
+                    VParseException::throw("Required object key \"$key\" not found", $this, $value);
                 }
 
                 $parsedValue[$key] = $type->empty();
@@ -113,8 +114,7 @@ class VObject extends BaseType
             if (! $results['ok']) {
 
                 foreach ($results['issues'] as $issue) {
-
-                    $context->addIssue(0, $this, $issue[2]);
+                    VParseException::throw($issue[2], $this, $value);
 
                 }
             }

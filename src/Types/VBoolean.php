@@ -4,6 +4,7 @@ namespace Vod\Vod\Types;
 
 use Exception;
 use Spatie\TypeScriptTransformer\Structures\MissingSymbolsCollection;
+use Vod\Vod\Exceptions\VParseException;
 
 /**
  * @extends BaseType<bool>
@@ -17,7 +18,7 @@ class VBoolean extends BaseType
         }
 
         if (! is_bool($value)) {
-            throw new Exception('Value is not a boolean');
+            VParseException::throw('Value is not a boolean', $this, $value);
         }
 
         return $value;
