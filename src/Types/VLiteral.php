@@ -3,6 +3,7 @@
 namespace Vod\Vod\Types;
 
 use Spatie\TypeScriptTransformer\Structures\MissingSymbolsCollection;
+use Vod\Vod\Exceptions\VParseException;
 
 class VLiteral extends BaseType
 {
@@ -18,7 +19,7 @@ class VLiteral extends BaseType
     public function parseValueForType($value, BaseType $context)
     {
         if ($value !== $this->value) {
-            throw new \Exception('Value is not '.$this->value);
+            VParseException::throw('Value is not '.$this->value, $context, $value);
         }
 
         return $value;

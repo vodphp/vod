@@ -5,6 +5,7 @@ namespace Vod\Vod\Types;
 use Closure;
 use Illuminate\Support\Facades\Validator;
 use Spatie\TypeScriptTransformer\Structures\MissingSymbolsCollection;
+use Vod\Vod\Exceptions\VParseException;
 
 /**
  * @template T
@@ -71,7 +72,7 @@ abstract class BaseType
                 [$code, $source, $msg] = $issue;
                 $message .= $msg.PHP_EOL;
             }
-            throw new \Exception($message);
+            VParseException::throw($message, $this, $value);
         }
 
         return $results['value'];
@@ -109,7 +110,7 @@ abstract class BaseType
         }
         try {
             $value = $this->parseValueForType($value, $this);
-        } catch (\Exception $e) {
+        } catch (VParseException $e) {
             if ($this->isOptional()) {
                 return [
                     'ok' => true,

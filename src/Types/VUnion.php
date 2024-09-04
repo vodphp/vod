@@ -3,6 +3,7 @@
 namespace Vod\Vod\Types;
 
 use Spatie\TypeScriptTransformer\Structures\MissingSymbolsCollection;
+use Vod\Vod\Exceptions\VParseException;
 
 class VUnion extends BaseType
 {
@@ -21,11 +22,19 @@ class VUnion extends BaseType
         foreach ($this->types as $type) {
             try {
                 return $type->parseValueForType($value, $context);
-            } catch (\Exception $e) {
+            } catch (VParseException $e) {
                 continue;
             }
         }
-        throw new \Exception('Value does not match any type in union');
+        VParseException::throw('Value does not match any type in union', $context, $value);
+    }
+
+    protected function setParentsRecursively()
+    {
+        foreach ($this->types as $type) {
+            $type->setParent($this);
+            $type->setParentsRecursively();
+        }
     }
 
     protected function generateJsonSchema(): array

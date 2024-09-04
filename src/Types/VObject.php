@@ -25,6 +25,8 @@ class VObject extends BaseType
 
     public function define(string $name, BaseType $type)
     {
+        $type->setParent($this);
+        $type->setParentsRecursively();
         $this->definitions[$name] = $type;
 
         return $this;
@@ -84,7 +86,7 @@ class VObject extends BaseType
 
     public function parseValueForType($value, BaseType $context)
     {
-
+        $this->setParentsRecursively();
         if (! is_array($value)) {
             VParseException::throw('Value is not an object', $this, $value);
 

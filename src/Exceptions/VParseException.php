@@ -11,7 +11,7 @@ class VParseException extends Exception
 
     public mixed $value;
 
-    public function __construct(string $message = 'Value does not match any type in union', int $code = 0, ?\Throwable $previous = null, ?BaseType $type = null, mixed $value = null)
+    public function __construct(string $message = 'Value is invalid', int $code = 0, ?\Throwable $previous = null, ?BaseType $type = null, mixed $value = null)
     {
         parent::__construct($message, $code, $previous);
         $this->type = $type;

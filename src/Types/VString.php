@@ -3,6 +3,7 @@
 namespace Vod\Vod\Types;
 
 use Spatie\TypeScriptTransformer\Structures\MissingSymbolsCollection;
+use Vod\Vod\Exceptions\VParseException;
 
 /**
  * @extends BaseType<string>
@@ -12,7 +13,7 @@ class VString extends BaseType
     public function parseValueForType($value, BaseType $context)
     {
         if (! is_string($value)) {
-            throw new \Exception('Value is not a string');
+            VParseException::throw('Value is not a string', $context, $value);
         }
 
         return (string) $value;

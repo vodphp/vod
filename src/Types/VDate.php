@@ -3,6 +3,7 @@
 namespace Vod\Vod\Types;
 
 use Spatie\TypeScriptTransformer\Structures\MissingSymbolsCollection;
+use Vod\Vod\Exceptions\VParseException;
 
 class VDate extends BaseType
 {
@@ -16,7 +17,7 @@ class VDate extends BaseType
     public function parseValueForType($value, BaseType $context)
     {
         if (! is_int($value)) {
-            throw new \Exception('Value is not an integer');
+            VParseException::throw('Value is not an integer', $context, $value);
         }
 
         return $value;

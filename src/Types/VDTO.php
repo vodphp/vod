@@ -7,6 +7,7 @@ use Spatie\LaravelTypeScriptTransformer\Transformers\DtoTransformer;
 use Spatie\TypeScriptTransformer\Structures\MissingSymbolsCollection;
 use Spatie\TypeScriptTransformer\Transformers\TransformsTypes;
 use Spatie\TypeScriptTransformer\TypeScriptTransformerConfig;
+use Vod\Vod\Exceptions\VParseException;
 
 /**
  * @template T
@@ -27,7 +28,7 @@ class VDTO extends BaseType
             return;
         }
         if (! class_exists($this->className)) {
-            throw new \Exception('Class does not exist');
+            VParseException::throw('Class does not exist', $this, $this->className);
         }
         if (! is_subclass_of($this->className, '\Spatie\LaravelData\Data')) {
             // For testing purposes, we'll skip this check

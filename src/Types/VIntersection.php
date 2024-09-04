@@ -25,6 +25,14 @@ class VIntersection extends BaseType
         return $value;
     }
 
+    protected function setParentsRecursively()
+    {
+        foreach ($this->types as $type) {
+            $type->setParent($this);
+            $type->setParentsRecursively();
+        }
+    }
+
     protected function generateJsonSchema(): array
     {
         return [
