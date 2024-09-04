@@ -45,9 +45,10 @@ class VRef extends BaseType
 
         }
 
-        if (!$store->getDefinition($this->refName)) {
+        if (! $store->getDefinition($this->refName)) {
             throw new \Exception("Definition '{$this->refName}' not found in store");
         }
+
         return $store->getDefinition($this->refName)->parseValueForType($value, $context);
     }
 
