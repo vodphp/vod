@@ -2,7 +2,6 @@
 
 namespace Vod\Vod\Types;
 
-use Exception;
 use Spatie\TypeScriptTransformer\Structures\MissingSymbolsCollection;
 use Vod\Vod\Exceptions\VParseException;
 
