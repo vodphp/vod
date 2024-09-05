@@ -101,7 +101,9 @@ it('can generate JSON schema for OpenAI with optional fields', function () {
 
 it('can generate JSON schema for VAny', function () {
     $schema = v()->any();
-    expect($schema->toJsonSchema())->toBe([]);
+    expect($schema->toJsonSchema())->toBe([
+        'description' => 'any',
+    ]);
 });
 
 it('can generate JSON schema for VDTO', function () {
@@ -228,7 +230,9 @@ it('can generate JSON schema for complex nested structures', function () {
                 'minItems' => 2,
                 'maxItems' => 2,
             ],
-            'metadata' => [],
+            'metadata' => [
+                'description' => 'any',
+            ],
         ],
         'required' => ['name', 'age', 'tags', 'metadata'],
     ]);
