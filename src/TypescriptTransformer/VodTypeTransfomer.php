@@ -15,7 +15,7 @@ class VodTypeTransfomer implements Transformer
     {
         if (is_subclass_of($class->getName(), Vod::class, true)) {
             $reflector = ClassTypeReflector::create($class);
-            $missingSymbols = new MissingSymbolsCollection();
+            $missingSymbols = new MissingSymbolsCollection;
 
             return TransformedType::create(
                 $reflector->getReflectionClass(),
@@ -25,8 +25,7 @@ class VodTypeTransfomer implements Transformer
             );
 
         }
+
         return null;
     }
 }
-
-
