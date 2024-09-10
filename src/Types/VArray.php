@@ -22,7 +22,11 @@ class VArray extends BaseType
     public function parseValueForType($value, BaseType $context)
     {
         if ($this->isOptional() && $value === null) {
-            return null;
+            return [];
+        }
+
+        if ($value === null) {
+            return [];
         }
 
         if (! is_array($value)) {
