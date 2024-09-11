@@ -2,9 +2,10 @@
 
 namespace Vod\Vod;
 
+use JsonSerializable;
 use Vod\Vod\Types\BaseType;
 
-abstract class Vod
+abstract class Vod implements JsonSerializable
 {
     public function __construct(
         protected array $input = []
@@ -23,6 +24,11 @@ abstract class Vod
     public function defaults()
     {
         return $this->v()->empty();
+    }
+
+    public function jsonSerialize(): mixed
+    {
+        return $this->__invoke();
     }
 
     public static function from(array $input): static
