@@ -14,16 +14,16 @@ abstract class Vod implements JsonSerializable
     /**
      * @return BaseType
      */
-    abstract public function v();
+    abstract public static function schema();
 
     public function __invoke()
     {
-        return $this->v()->parse($this->input);
+        return static::schema()->parse($this->input);
     }
 
     public function defaults()
     {
-        return $this->v()->empty();
+        return static::schema()->empty();
     }
 
     public function jsonSerialize(): mixed
