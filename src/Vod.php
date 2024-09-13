@@ -8,7 +8,7 @@ use Vod\Vod\Types\BaseType;
 abstract class Vod implements JsonSerializable
 {
     public function __construct(
-        protected array $input = []
+        protected mixed $input
     ) {}
 
     /**
