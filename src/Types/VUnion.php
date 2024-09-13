@@ -26,7 +26,7 @@ class VUnion extends BaseType
                 continue;
             }
         }
-        VParseException::throw('Value does not match any type in union', $context, $value);
+        VParseException::throw('Value '.json_encode($value).' does not match any type in union', $context, $value);
     }
 
     protected function setParentsRecursively()

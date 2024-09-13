@@ -28,7 +28,7 @@ class VDTO extends BaseType
             return;
         }
         if (! class_exists($this->className)) {
-            VParseException::throw('Class does not exist', $this, $this->className);
+            VParseException::throw('Class '.json_encode($this->className).' does not exist', $this, $this->className);
         }
         if (! is_subclass_of($this->className, '\Spatie\LaravelData\Data')) {
             // For testing purposes, we'll skip this check

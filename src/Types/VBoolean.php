@@ -17,7 +17,7 @@ class VBoolean extends BaseType
         }
 
         if (! is_bool($value)) {
-            VParseException::throw('Value is not a boolean', $this, $value);
+            VParseException::throw('Value '.json_encode($value).' is not a boolean', $this, $value);
         }
 
         return $value;

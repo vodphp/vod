@@ -17,7 +17,7 @@ class VDate extends BaseType
     public function parseValueForType($value, BaseType $context)
     {
         if (! is_int($value)) {
-            VParseException::throw('Value is not an integer', $context, $value);
+            VParseException::throw('Value '.json_encode($value).' is not a date', $context, $value);
         }
 
         return $value;

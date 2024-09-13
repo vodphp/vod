@@ -13,7 +13,7 @@ class VString extends BaseType
     public function parseValueForType($value, BaseType $context)
     {
         if (! is_string($value)) {
-            VParseException::throw('Value is not a string', $context, $value);
+            VParseException::throw('Value '.json_encode($value).' is not a string', $context, $value);
         }
 
         return (string) $value;

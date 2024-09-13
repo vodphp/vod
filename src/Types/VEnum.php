@@ -20,7 +20,7 @@ class VEnum extends BaseType
     public function parseValueForType($value, BaseType $context)
     {
         if (! in_array($value, $this->values, true)) {
-            VParseException::throw('Value is not a valid enum member', $this, $value);
+            VParseException::throw('Value '.json_encode($value).' is not a valid enum member', $this, $value);
         }
 
         return $value;

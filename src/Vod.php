@@ -31,7 +31,7 @@ abstract class Vod implements JsonSerializable
         return $this->__invoke();
     }
 
-    public static function from(array $input): static
+    public static function from(mixed $input): static
     {
         // @phpstan-ignore-next-line
         return new static($input);

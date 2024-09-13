@@ -19,7 +19,7 @@ class VLiteral extends BaseType
     public function parseValueForType($value, BaseType $context)
     {
         if ($value !== $this->value) {
-            VParseException::throw('Value is not '.$this->value, $context, $value);
+            VParseException::throw('Value '.json_encode($value).' is not '.$this->value, $context, $value);
         }
 
         return $value;

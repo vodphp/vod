@@ -38,7 +38,7 @@ class VNumber extends BaseType
     public function parseValueForType($value, BaseType $context)
     {
         if (! is_numeric($value) || is_string($value)) {
-            VParseException::throw('Value is not a number', $context, $value);
+            VParseException::throw('Value '.json_encode($value).' is not a number', $context, $value);
         }
         if ($this->rules) {
             if (in_array('int', $this->rules)) {

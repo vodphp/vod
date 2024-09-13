@@ -88,17 +88,17 @@ class VObject extends BaseType
     {
         $this->setParentsRecursively();
         if (! is_array($value)) {
-            VParseException::throw('Value is not an object', $this, $value);
+            VParseException::throw('Value '.json_encode($value).' is not an object', $this, $value);
 
             return;
         }
 
         foreach ($this->schema as $key => $type) {
             if (! is_string($key)) {
-                VParseException::throw('Keys must be strings', $this, $value);
+                VParseException::throw('Keys '.json_encode($key).' must be strings', $this, $value);
             }
             if (! ($type instanceof BaseType)) {
-                VParseException::throw('Schema values inherit from the BaseType', $this, $value);
+                VParseException::throw('Schema values inherit from the BaseType, '.json_encode($type).' found', $this, $value);
             }
         }
         $parsedValue = [];

@@ -30,7 +30,7 @@ class VArray extends BaseType
         }
 
         if (! is_array($value)) {
-            VParseException::throw('Value is not an array', $this, $value);
+            VParseException::throw('Value '.json_encode($value).' is not an array', $this, $value);
         }
 
         return array_map(fn ($item) => $this->schema->parse($item), $value);
