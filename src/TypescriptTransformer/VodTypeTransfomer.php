@@ -20,7 +20,7 @@ class VodTypeTransfomer implements Transformer
             return TransformedType::create(
                 $reflector->getReflectionClass(),
                 $reflector->getName(),
-                app($class->getName())->v()->toTypeScript($missingSymbols),
+                $class->getName()::schema()->toTypeScript($missingSymbols),
                 $missingSymbols
             );
 
