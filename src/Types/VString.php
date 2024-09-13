@@ -3,6 +3,7 @@
 namespace Vod\Vod\Types;
 
 use Spatie\TypeScriptTransformer\Structures\MissingSymbolsCollection;
+use Stringable;
 use Vod\Vod\Exceptions\VParseException;
 
 /**
@@ -12,11 +13,17 @@ class VString extends BaseType
 {
     public function parseValueForType($value, BaseType $context)
     {
-        if (! is_string($value)) {
-            VParseException::throw('Value '.json_encode($value).' is not a string', $context, $value);
+        if ($value instanceof Stringable) {
+            $valueAsString = (string) $value;
+        } else {
+            $valueAsString = $value;
         }
 
-        return (string) $value;
+        if (! is_string($valueAsString)) {
+            VParseException::throw('Value '.json_encode($valueAsString).' is not a string', $context, $value);
+        }
+
+        return $valueAsString;
     }
 
     public function email(): self

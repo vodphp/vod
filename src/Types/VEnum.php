@@ -3,6 +3,7 @@
 namespace Vod\Vod\Types;
 
 use Spatie\TypeScriptTransformer\Structures\MissingSymbolsCollection;
+use Stringable;
 use Vod\Vod\Exceptions\VParseException;
 
 /**
@@ -19,11 +20,16 @@ class VEnum extends BaseType
 
     public function parseValueForType($value, BaseType $context)
     {
-        if (! in_array($value, $this->values, true)) {
-            VParseException::throw('Value '.json_encode($value).' is not a valid enum member', $this, $value);
+        if ($value instanceof Stringable) {
+            $valueAsString = (string) $value;
+        } else {
+            $valueAsString = $value;
+        }
+        if (! in_array($valueAsString, $this->values, true)) {
+            VParseException::throw('Value '.json_encode($valueAsString).' is not a valid enum member', $this, $value);
         }
 
-        return $value;
+        return $valueAsString;
     }
 
     public function toTypeScript(MissingSymbolsCollection $collection): string
