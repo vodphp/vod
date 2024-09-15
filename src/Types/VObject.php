@@ -10,9 +10,20 @@ use Vod\Vod\Exceptions\VParseException;
  * */
 class VObject extends BaseType
 {
+    /**
+     * @var array<string, BaseType<mixed>>
+     */
     protected array $schema;
 
     protected array $definitions = [];
+
+    /**
+     * @return array<string, BaseType<mixed>>
+     */
+    public function getSchema()
+    {
+        return $this->schema;
+    }
 
     /**
      * @param  array<string, BaseType<mixed>>  $schema
@@ -206,8 +217,4 @@ class VObject extends BaseType
         }
     }
 
-    public function getSchema(): array
-    {
-        return $this->schema;
-    }
 }

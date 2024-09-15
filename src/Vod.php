@@ -2,8 +2,10 @@
 
 namespace Vod\Vod;
 
+use Illuminate\Support\Arr;
 use JsonSerializable;
 use Vod\Vod\Types\BaseType;
+use Vod\Vod\Types\VObject;
 
 abstract class Vod implements JsonSerializable
 {
@@ -16,9 +18,14 @@ abstract class Vod implements JsonSerializable
      */
     abstract public static function schema();
 
-    public function __invoke()
+    public function __invoke(?string $name = null)
     {
-        return static::schema()->parse($this->input);
+
+        $value = static::schema()->parse($this->input);
+        if ($name) {
+            return Arr::get($value, $name);
+        }
+        return $value;
     }
 
     public function raw()
@@ -29,8 +36,11 @@ abstract class Vod implements JsonSerializable
     public function __get(string $name)
     {
         $schema = static::schema();
-        return $schema->parse($this->input->{$name});
+        assert($schema instanceof VObject);
+        $childSchema = $schema->getSchema()[$name];
+        return $childSchema->parse($this->input[$name]);
     }
+
 
     public function defaults()
     {
