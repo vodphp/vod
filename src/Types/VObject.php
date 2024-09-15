@@ -216,5 +216,4 @@ class VObject extends BaseType
             $definition->setParentsRecursively();
         }
     }
-
 }

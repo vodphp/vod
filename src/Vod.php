@@ -25,6 +25,7 @@ abstract class Vod implements JsonSerializable
         if ($name) {
             return Arr::get($value, $name);
         }
+
         return $value;
     }
 
@@ -38,9 +39,9 @@ abstract class Vod implements JsonSerializable
         $schema = static::schema();
         assert($schema instanceof VObject);
         $childSchema = $schema->getSchema()[$name];
+
         return $childSchema->parse($this->input[$name]);
     }
-
 
     public function defaults()
     {
