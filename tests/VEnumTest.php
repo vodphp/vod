@@ -17,7 +17,7 @@ it('VEnum()', function () {
     expect(fn () => $enum->parse('yellow'))->toThrow(Exception::class);
     expect(fn () => $enum->parse(1))->toThrow(Exception::class);
 
-    expect($enum->safeParse('yellow')['errors'])->toBe('Value is not a valid enum member');
+    expect($enum->safeParse('yellow')['errors'])->toBe('Value "yellow" is not a valid enum member');
     expect($enum->safeParse('yellow')['issues'])->toBeArray()->toHaveLength(1);
 
     expect($enum->toTypeScript(new MissingSymbolsCollection))->toBe("'red' | 'green' | 'blue'");

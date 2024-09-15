@@ -21,6 +21,17 @@ abstract class Vod implements JsonSerializable
         return static::schema()->parse($this->input);
     }
 
+    public function raw()
+    {
+        return $this->input;
+    }
+
+    public function __get(string $name)
+    {
+        $schema = static::schema();
+        return $schema->parse($this->input->{$name});
+    }
+
     public function defaults()
     {
         return static::schema()->empty();

@@ -14,7 +14,7 @@ it('VBoolean()', function () {
     expect(fn () => v()->boolean()->parse(1))->toThrow(Exception::class);
     expect(fn () => v()->boolean()->parse([]))->toThrow(Exception::class);
 
-    expect(v()->boolean()->safeParse('true')['errors'])->toBe('Value is not a boolean');
+    expect(v()->boolean()->safeParse('true')['errors'])->toBe('Value "true" is not a boolean');
     expect(v()->boolean()->safeParse('true')['issues'])->toBeArray()->toHaveLength(1);
     expect(v()->boolean()->toTypeScript(new MissingSymbolsCollection))->toBe('boolean');
 });

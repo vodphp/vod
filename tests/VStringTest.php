@@ -23,7 +23,7 @@ it('VString()', function () {
     expect(fn () => v()->string()->parse([]))->toThrow(Exception::class);
     expect(fn () => v()->string()->parse(new stdClass))->toThrow(Exception::class);
 
-    expect(v()->string()->safeParse(new stdClass)['errors'])->toBe('Value is not a string');
+    expect(v()->string()->safeParse(new stdClass)['errors'])->toBe('Value {} is not a string');
     expect((v()->string()->safeParse(new stdClass)['issues']))->toBeArray()->toHaveLength(1);
 
     expect(v()->string()->default('123')->optional()->parse(null))->toBe('123');

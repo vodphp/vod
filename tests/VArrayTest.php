@@ -13,7 +13,7 @@ it('VArray()', function () {
     expect(fn () => v()->array(v()->string())->parse([1, 2, 3]))->toThrow(Exception::class);
     expect(fn () => v()->array()->parse('not an array'))->toThrow(Exception::class);
 
-    expect(v()->array()->safeParse('not an array')['errors'])->toBe('Value is not an array');
+    expect(v()->array()->safeParse('not an array')['errors'])->toBe('Value "not an array" is not an array');
     expect(v()->array()->safeParse('not an array')['issues'])->toBeArray()->toHaveLength(1);
     expect(v()->array(v()->string())->toTypeScript(new MissingSymbolsCollection))->toBe('string[]');
     expect(v()->array(v()->string())->and(v()->number())->toTypeScript(new MissingSymbolsCollection))->toBe('(string[] & number)');

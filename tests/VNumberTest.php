@@ -17,7 +17,7 @@ it('VNumber()', function () {
     expect(fn () => v()->number()->parse([]))->toThrow(Exception::class);
     expect(fn () => v()->number()->parse(new stdClass))->toThrow(Exception::class);
 
-    expect(v()->number()->safeParse(new stdClass)['errors'])->toBe('Value is not a number');
+    expect(v()->number()->safeParse(new stdClass)['errors'])->toBe('Value {} is not a number');
     expect((v()->number()->safeParse(new stdClass)['issues']))->toBeArray()->toHaveLength(1);
     expect(v()->number()->toTypeScript(new MissingSymbolsCollection))->toBe('number');
 });

@@ -17,7 +17,7 @@ it('VObject()', function () {
     expect(fn () => v()->object($schema)->parse(['name' => 'John', 'age' => 'thirty']))->toThrow(Exception::class);
     expect(fn () => v()->object($schema)->parse('not an object'))->toThrow(Exception::class);
 
-    expect(v()->object($schema)->safeParse('not an object')['errors'])->toBe('Value is not an object');
+    expect(v()->object($schema)->safeParse('not an object')['errors'])->toBe('Value "not an object" is not an object');
     expect(v()->object($schema)->safeParse('not an object')['issues'])->toBeArray()->toHaveLength(1);
     expect(v()->object($schema)->toTypeScript(new MissingSymbolsCollection))->toBe('{ name: string; age: number; }');
 
