@@ -51,7 +51,6 @@ abstract class Vod implements JsonSerializable
         $this->input[$name] = $childSchema->parse($value);
     }
 
-
     public function defaults()
     {
         return static::schema()->empty();
