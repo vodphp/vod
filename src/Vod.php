@@ -9,7 +9,7 @@ use Vod\Vod\Types\VObject;
 
 abstract class Vod implements JsonSerializable
 {
-    public function __construct(
+    final public function __construct(
         protected mixed $input
     ) {}
 
@@ -43,6 +43,15 @@ abstract class Vod implements JsonSerializable
         return $childSchema->parse($this->input[$name]);
     }
 
+    public function __set(string $name, mixed $value)
+    {
+        $schema = static::schema();
+        assert($schema instanceof VObject);
+        $childSchema = $schema->getSchema()[$name];
+        $this->input[$name] = $childSchema->parse($value);
+    }
+
+
     public function defaults()
     {
         return static::schema()->empty();
@@ -53,9 +62,8 @@ abstract class Vod implements JsonSerializable
         return $this->__invoke();
     }
 
-    public static function from(mixed $input): static
+    public static function from(mixed $input)
     {
-        // @phpstan-ignore-next-line
         return new static($input);
     }
 }

@@ -19,8 +19,8 @@
     ],
     "require": {
         "php": "^8",
-        "spatie/laravel-package-tools": "^1.16",
         "laravel/tinker": "^2",
+        "spatie/laravel-package-tools": "^1.16",
         "spatie/laravel-typescript-transformer": "^2"
     },
     "require-dev": {
