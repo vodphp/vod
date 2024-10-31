@@ -14,6 +14,8 @@ abstract class BaseType
 {
     protected array $rules = [];
 
+    protected array $nestedRules = [];
+
     protected array $after = [];
 
     protected array $issues = [];
@@ -100,6 +102,7 @@ abstract class BaseType
      */
     public function safeParse(mixed $value, string $label = 'value')
     {
+
         $this->issues = [];
         if ($this->isOptional() && $value === null) {
             return [
@@ -120,12 +123,23 @@ abstract class BaseType
             }
             $this->addIssue(0, $this, $e->getMessage());
         }
-        if ($this->rules) {
+        if ($this->rules || $this->nestedRules) {
             $rules = $this->rules;
             if ($this->isOptional()) {
                 $rules[] = 'nullable';
             }
-            $validator = Validator::make([$label => $value], [$label => $rules]);
+
+            $preparedRules = [];
+            if ($rules) {
+                $preparedRules[$label] = $rules;
+            }
+            if ($this->nestedRules) {
+                foreach ($this->nestedRules as $key => $nestedRules) {
+                    $preparedRules[$label . '.' . $key] = $nestedRules;
+                }
+            }
+
+            $validator = Validator::make([$label => $value], $preparedRules);
 
             if ($validator->fails()) {
                 foreach ($validator->errors()->all() as $error) {
@@ -166,7 +180,11 @@ abstract class BaseType
 
     public function rules($rules)
     {
-
+        //Check if is associative array
+        if (is_array($rules) && array_keys($rules) !== range(0, count($rules) - 1)) {
+            $this->nestedRules = $rules;
+            return $this;
+        }
         if (is_string($rules)) {
             $rules = explode('|', $rules);
         }

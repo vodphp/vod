@@ -1,6 +1,7 @@
 <?php
 
 use Spatie\TypeScriptTransformer\Structures\MissingSymbolsCollection;
+use Vod\Vod\Exceptions\VParseException;
 use Vod\Vod\Types\VObject;
 
 use function Vod\Vod\v;
@@ -41,4 +42,35 @@ it('VObject()', function () {
             'zip' => v()->string()->optional(),
         ]),
     ])->toTypeScript(new MissingSymbolsCollection))->toBe('{ name: string; age: number; tags: string[]; address: { street: string; city: string; zip: string | null; }; }');
+});
+
+it('Can support rules', function () {
+    $schema = [
+        'name' => v()->string()->optional()->rules('doesnt_start_with:A'),
+    ];
+
+    expect(v()->object($schema)->parse(['name' => 'John']))->toBe(['name' => 'John']);
+    expect(fn () => v()->object($schema)->parse(['name' => 'Adam']))->toThrow(VParseException::class);
+
+});
+
+it('Can support nested rules', function () {
+    $schema = [
+        'name' => v()->string()->optional(),
+        'address' => v()->object([
+            'street' => v()->string()->optional(),
+        ]),
+    ];
+
+    $v = v()->object($schema)
+        ->rules(
+            [
+                'name' => 'doesnt_start_with:A',
+                'address.street' => 'doesnt_start_with:B',
+            ]);
+
+    expect($v->parse(['name' => 'John', 'address' => ['street' => 'Main St']]))->toBe(['name' => 'John', 'address' => ['street' => 'Main St']]);
+
+    expect(fn () => $v->parse(['name' => 'Adam', 'address' => ['street' => 'Main St']]))->toThrow(VParseException::class);
+    expect(fn () => $v->parse(['name' => 'John', 'address' => ['street' => 'Broadway']]))->toThrow(VParseException::class);
 });
