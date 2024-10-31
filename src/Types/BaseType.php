@@ -135,7 +135,7 @@ abstract class BaseType
             }
             if ($this->nestedRules) {
                 foreach ($this->nestedRules as $key => $nestedRules) {
-                    $preparedRules[$label . '.' . $key] = $nestedRules;
+                    $preparedRules[$label.'.'.$key] = $nestedRules;
                 }
             }
 
@@ -183,6 +183,7 @@ abstract class BaseType
         //Check if is associative array
         if (is_array($rules) && array_keys($rules) !== range(0, count($rules) - 1)) {
             $this->nestedRules = $rules;
+
             return $this;
         }
         if (is_string($rules)) {
