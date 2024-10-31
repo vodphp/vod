@@ -1,5 +1,5 @@
 {
-    "name": "deanmcpherson/vod",
+    "name": "paperform-co/vod",
     "description": "vod, zod style validation for PHP",
 
     "keywords": [
@@ -8,12 +8,12 @@
         "validation",
         "zod"
     ],
-    "homepage": "https://github.com/deanmcpherson/v",
+    "homepage": "https://github.com/paperform-co/v",
     "license": "MIT",
     "authors": [
         {
             "name": "Dean McPherson",
-            "email": "dean@deanmcpherson.com",
+            "email": "dean@paperform-co.com",
             "role": "Developer"
         }
     ],
