@@ -1,18 +1,19 @@
 {
-    "name": "paperform-co/vod",
+    "name": "vod/vod",
     "description": "vod, zod style validation for PHP",
     "keywords": [
-        "v",
+        "vod",
+        "vod-validation",
         "laravel",
         "validation",
         "zod"
     ],
-    "homepage": "https://github.com/paperform-co/vod",
+    "homepage": "https://github.com/deanmcpherson/vod",
     "license": "MIT",
     "authors": [
         {
             "name": "Dean McPherson",
-            "email": "dean@paperform-co.com",
+            "email": "dean@deanmcpherson.com",
             "role": "Developer"
         }
     ],
