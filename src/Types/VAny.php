@@ -26,7 +26,7 @@ class VAny extends BaseType
 
     protected function generateJsonSchema(): array
     {
-        //no type defined.
+        // no type defined.
         return [
             'description' => 'any',
         ];

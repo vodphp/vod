@@ -38,6 +38,7 @@ class VDeferred extends BaseType
                 return $this->type->parseValueForType($value(), $context);
             }, $value->group());
         }
+
         return $this->type->parseValueForType($value, $context);
     }
 

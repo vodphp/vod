@@ -9,7 +9,8 @@ class VIntersection extends BaseType
     /**
      * @param  BaseType[]  $types
      */
-    public function __construct(public array $types) {
+    public function __construct(public array $types)
+    {
         foreach ($this->types as $type) {
             $type->setParent($this);
         }
@@ -20,6 +21,7 @@ class VIntersection extends BaseType
         if ($simple) {
             return 'mixed';
         }
+
         return implode('&', array_map(fn (BaseType $type) => $type->toPhpType(), $this->types));
     }
 

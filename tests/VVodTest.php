@@ -1,32 +1,33 @@
 <?php
 
-use Vod\Vod\Any;
-use Vod\Vod\Exceptions\VParseException;
-use Vod\Vod\Vod;
 use Vod\Vod\Types\VObject;
+use Vod\Vod\Vod;
+
 use function Vod\Vod\v;
 
-class Test extends Vod {
-
-    public static function schema(): VObject {
+class Test extends Vod
+{
+    public static function schema(): VObject
+    {
         return v()->object([
             'name' => v()->string(),
         ]);
     }
 
-    public function hi() {
-        return 'hi ' . $this->name;
+    public function hi()
+    {
+        return 'hi '.$this->name;
     }
 }
 
 it('can be used as a class', function () {
-   
+
     $testSchema = v()->vod(Test::class);
     $test = $testSchema->parse([
         'name' => 'test',
     ]);
     expect($test)->toBeInstanceOf(Test::class);
-    
+
     $test2 = $testSchema->parse(
         new Test([
             'name' => 'test',

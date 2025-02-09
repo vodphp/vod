@@ -8,6 +8,7 @@ use Vod\Vod\Types\VAny;
 use Vod\Vod\Types\VArray;
 use Vod\Vod\Types\VBoolean;
 use Vod\Vod\Types\VDate;
+use Vod\Vod\Types\VDeferred;
 use Vod\Vod\Types\VDTO;
 use Vod\Vod\Types\VEnum;
 use Vod\Vod\Types\VIntersection;
@@ -18,14 +19,13 @@ use Vod\Vod\Types\VRef;
 use Vod\Vod\Types\VString;
 use Vod\Vod\Types\VTuple;
 use Vod\Vod\Types\VUnion;
-use Vod\Vod\Types\VDeferred;
 use Vod\Vod\Types\VVod;
 use Vod\Vod\Types\VVodClass;
 
 class V
 {
     use Macroable;
-    
+
     public function ref(string $name)
     {
         return new VRef($name);
@@ -78,7 +78,7 @@ class V
             return $this->boolean()->default($type);
         }
         if (is_array($type)) {
-            //is associative array?
+            // is associative array?
             if (array_keys($type) !== range(0, count($type) - 1)) {
 
                 return $this->inferObject($type);
@@ -137,17 +137,16 @@ class V
     }
 
     /**
-     * @param class-string<Vod> $className
+     * @param  class-string<Vod>  $className
      */
     public function vod(string $className)
     {
         return new VVod($className);
     }
 
-
     public function vodClass()
     {
-        return new VVodClass();
+        return new VVodClass;
     }
 
     public function literal(string $value)

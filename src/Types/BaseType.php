@@ -75,7 +75,7 @@ abstract class BaseType
             $message = '';
             foreach ($results['issues'] as $issue) {
                 [$code, $source, $msg] = $issue;
-                $message .= $msg . PHP_EOL;
+                $message .= $msg.PHP_EOL;
             }
             VParseException::throw($message, $this, $value);
         }
@@ -98,10 +98,7 @@ abstract class BaseType
         return new VArray($this);
     }
 
-
-
     abstract public function toTypeScript(MissingSymbolsCollection $collection): string;
-
 
     public function toPhpType(bool $simple = false): string
     {
@@ -116,6 +113,7 @@ abstract class BaseType
         if ($ref && $this->parent !== null) {
             return str_replace('\\', '.', $ref);
         }
+
         return $this->toTypeScript($collection);
     }
 
@@ -135,7 +133,7 @@ abstract class BaseType
             ];
         }
         try {
-            if ($value instanceof Vod && !$this instanceof VVodClass && !$this instanceof VVod) {
+            if ($value instanceof Vod && ! $this instanceof VVodClass && ! $this instanceof VVod) {
                 $value = $value->value();
             }
             $value = $this->parseValueForType($value, $this);
@@ -161,7 +159,7 @@ abstract class BaseType
             }
             if ($this->nestedRules) {
                 foreach ($this->nestedRules as $key => $nestedRules) {
-                    $preparedRules[$label . '.' . $key] = $nestedRules;
+                    $preparedRules[$label.'.'.$key] = $nestedRules;
                 }
             }
 
@@ -206,7 +204,7 @@ abstract class BaseType
 
     public function rules($rules)
     {
-        //Check if is associative array
+        // Check if is associative array
         if (is_array($rules) && array_keys($rules) !== range(0, count($rules) - 1)) {
             $this->nestedRules = $rules;
 
@@ -215,7 +213,7 @@ abstract class BaseType
         if (is_string($rules)) {
             $rules = explode('|', $rules);
         }
-        //concat all rules
+        // concat all rules
         $this->rules = array_merge($this->rules, $rules);
 
         return $this;
@@ -252,9 +250,7 @@ abstract class BaseType
     }
 
     /**
-     * 
-     * @param class-string $ref 
-     * @return self 
+     * @param  class-string  $ref
      */
     public function globalReference(string $ref): self
     {

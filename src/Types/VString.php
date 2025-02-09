@@ -45,7 +45,7 @@ class VString extends BaseType
         return $this;
     }
 
-    //protected $default = '';
+    // protected $default = '';
 
     public function toTypeScript(MissingSymbolsCollection $collection): string
     {
