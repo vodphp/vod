@@ -50,11 +50,9 @@ class VDTO extends BaseType
 
         $dtoTransformer = new DtoTransformer(
             TypeScriptTransformerConfig::create(
-                // config('typescript-transformer')
             )
         );
         $reflection = new ReflectionClass($this->className);
-        // dd($dtoTransformer->transform($reflection, $this->className));
         $transformed = $dtoTransformer->transform($reflection, $this->className);
 
         foreach ($transformed->missingSymbols->all() as $symbol) {

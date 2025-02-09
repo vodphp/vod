@@ -2,6 +2,7 @@
 
 namespace Vod\Vod\TypescriptTransformer;
 
+use Illuminate\Support\Facades\File;
 use ReflectionClass;
 use Spatie\TypeScriptTransformer\Structures\MissingSymbolsCollection;
 use Spatie\TypeScriptTransformer\Structures\TransformedType;
@@ -16,14 +17,20 @@ class VodTypeTransfomer implements Transformer
         if (is_subclass_of($class->getName(), Vod::class, true)) {
             $reflector = ClassTypeReflector::create($class);
             $missingSymbols = new MissingSymbolsCollection;
+            try {
+                $schema = $class->getName()::schema();
+            } catch (\Error $e) {
+                print_r($class->getName());
+                return null;
+            }
+            $ts = $class->getName()::schema()->exportTypeScript($missingSymbols);
 
             return TransformedType::create(
                 $reflector->getReflectionClass(),
                 $reflector->getName(),
-                $class->getName()::schema()->toTypeScript($missingSymbols),
+                $ts,
                 $missingSymbols
             );
-
         }
 
         return null;

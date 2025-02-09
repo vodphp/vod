@@ -26,6 +26,11 @@ class VString extends BaseType
         return $valueAsString;
     }
 
+    public function toPhpType(bool $simple = false): string
+    {
+        return $this->isOptional() ? 'string|null' : 'string';
+    }
+
     public function email(): self
     {
         $this->rules[] = 'email';

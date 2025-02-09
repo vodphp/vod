@@ -6,7 +6,7 @@ use Spatie\TypeScriptTransformer\Structures\MissingSymbolsCollection;
 use Vod\Vod\Exceptions\VParseException;
 
 /**
- *  extends BaseType<mixed>
+ *  @extends BaseType<mixed>
  */
 class VRef extends BaseType
 {
@@ -16,15 +16,15 @@ class VRef extends BaseType
     {
 
         $parent = $this->getParent();
-        $topStore = null;
+
         while ($parent !== null) {
             if ($parent instanceof VObject) {
-                $topStore = $parent;
+                return $parent;
             }
             $parent = $parent->getParent();
         }
 
-        return $topStore;
+        return null;
     }
 
     public function toTypeScript(MissingSymbolsCollection $collection): string
@@ -34,7 +34,12 @@ class VRef extends BaseType
             VParseException::throw("Store is not set for VRef '{$this->refName}'", $this, $this->refName);
         }
 
-        return $store->getDefinition($this->refName)->toTypeScript($collection);
+        return $store->getDefinition($this->refName)->exportTypeScript($collection);
+    }
+
+    public function toPhpType(bool $simple = false): string
+    {
+        return $this->getStore()->getDefinition($this->refName)->toPhpType($simple);
     }
 
     public function parseValueForType($value, BaseType $context)
@@ -42,7 +47,10 @@ class VRef extends BaseType
         $store = $this->getStore();
         if ($store === null) {
             VParseException::throw("Store is not set for VRef '{$this->refName}'", $context, $this->refName);
+        }
 
+        if (! $store) {
+            return $value;
         }
 
         if (! $store->getDefinition($this->refName)) {

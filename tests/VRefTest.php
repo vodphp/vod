@@ -37,6 +37,8 @@ it('VRef can be created', function () {
 
 });
 
+
+
 it('VRef can reference through an array', function () {
     $root = v()->object([
         'exampleOfRef' => v()->ref('ref01')->array(),
@@ -54,4 +56,28 @@ it('VRef can reference through an array', function () {
             'world' => 123,
         ]],
     ]))->toBeArray()->toHaveLength(1);
+});
+
+
+it('VRef can be defined on any object in the chain', function () {
+    $root = v()->object([
+        'base' => v()->object([
+            'hello' => v()->string(),
+            'world' => v()->number(),
+            'other' => v()->object([
+                'reffed' => v()->ref('ref01'),
+            ]),
+        ])->define('ref01', v()->string()),
+    ]);
+
+    expect($root->parse([
+        'base' => [
+            'hello' => 'world',
+            'world' => 123,
+            'other' => [
+                'reffed' => 'world',
+            ],
+        ],
+    ]))->toBeArray()->toHaveLength(1);
+
 });

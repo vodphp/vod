@@ -34,18 +34,47 @@ class VObject extends BaseType
         $this->setParentsRecursively();
     }
 
-    public function define(string $name, BaseType $type)
+    public function define(string $name, BaseType $type, bool $skipHoisting = false)
     {
-        $type->setParent($this);
-        $type->setParentsRecursively();
+        if (!$skipHoisting) {
+            $type->setParent($this);
+            $type->setParentsRecursively();
+        }
         $this->definitions[$name] = $type;
-
+        if (!$skipHoisting) {
+            $this->hoistDefinitions();
+        }
         return $this;
+    }
+
+    public function getDefinitions(): array
+    {
+        return $this->definitions;
+    }
+
+    public function literalProperties(): array
+    {
+        $properties = [];
+        foreach ($this->schema as $key => $type) {
+            if ($type instanceof VLiteral) {
+                $properties[$key] = $type->empty();
+            }
+        }
+        return $properties;
     }
 
     public function getDefinition(string $name): ?BaseType
     {
-        return $this->definitions[$name] ?? null;
+        $parent = $this;
+        while ($parent) {
+            if ($parent instanceof VObject) {
+                if (isset($parent->getDefinitions()[$name])) {
+                    return $parent->getDefinitions()[$name];
+                }
+            }
+            $parent = $parent->getParent();
+        }
+        return null;
     }
 
     public function empty()
@@ -67,6 +96,19 @@ class VObject extends BaseType
         return $empty;
     }
 
+    private function getRootParent(): ?VObject
+    {
+        $parent = $this;
+        $parentObject = null;
+        while ($parent) {
+            if ($parent instanceof VObject) {
+                $parentObject = $parent;
+            }
+            $parent = $parent->getParent();
+        }
+        return $parentObject;
+    }
+
     public function toTypeScript(MissingSymbolsCollection $collection, ?string $name = null): string
     {
         $this->setParentsRecursively();
@@ -75,7 +117,7 @@ class VObject extends BaseType
             if ($type instanceof VRef) {
                 $part = "$key: {$type->getName()}";
             } else {
-                $part = "$key: {$type->toTypeScript($collection)}";
+                $part = "$key: {$type->exportTypeScript($collection)}";
             }
             $schema[] = $part;
         }
@@ -84,32 +126,48 @@ class VObject extends BaseType
             $ts .= "export type {$name} = ";
         }
 
-        $ts .= '{ '.implode('; ', $schema).'; }'.($this->isOptional() ? ' | null' : '');
+        $ts .= '{ ' . implode('; ', $schema) . '; }' . ($this->isOptional() ? ' | null' : '');
         //Only root object can have definitions
         if (! $this->getParent()) {
             foreach ($this->definitions as $name => $definition) {
-                $ts .= PHP_EOL."export type {$name} = {$definition->toTypeScript($collection)};";
+                $ts .= PHP_EOL . "export type {$name} = {$definition->exportTypeScript($collection)};";
             }
+        } else {
+            $this->hoistDefinitions();
         }
 
         return $ts;
+    }
+
+    public function hoistDefinitions()
+    {
+        $rootParent = $this->getRootParent();
+        $isTopLevel = $this->getParent() === null;
+        if (!$isTopLevel) {
+            foreach ($this->definitions as $name => $definition) {
+                $rootParent->define($name, $definition, true);
+            }
+        }
+        return $isTopLevel;
     }
 
     public function parseValueForType($value, BaseType $context)
     {
         $this->setParentsRecursively();
         if (! is_array($value)) {
-            VParseException::throw('Value '.json_encode($value).' is not an object', $this, $value);
+            VParseException::throw('Value ' . json_encode($value) . ' is not an object', $this, $value);
 
             return;
         }
 
         foreach ($this->schema as $key => $type) {
+            // @phpstan-ignore-next-line
             if (! is_string($key)) {
-                VParseException::throw('Keys '.json_encode($key).' must be strings', $this, $value);
+                VParseException::throw('Keys ' . json_encode($key) . ' must be strings', $this, $value);
             }
+            // @phpstan-ignore-next-line
             if (! ($type instanceof BaseType)) {
-                VParseException::throw('Schema values inherit from the BaseType, '.json_encode($type).' found', $this, $value);
+                VParseException::throw('Schema values inherit from the BaseType, ' . json_encode($type) . ' found', $this, $value);
             }
         }
         $parsedValue = [];
@@ -128,7 +186,6 @@ class VObject extends BaseType
 
                 foreach ($results['issues'] as $issue) {
                     VParseException::throw($issue[2], $this, $value);
-
                 }
             }
             $parsedValue[$key] = $results['value'] ?? null;
@@ -182,6 +239,7 @@ class VObject extends BaseType
 
     protected function addDescriptionToSchema(array $schema): array
     {
+
         $schema = parent::addDescriptionToSchema($schema);
 
         // Add descriptions to nested properties
@@ -196,13 +254,37 @@ class VObject extends BaseType
                 }
             }
         }
-        if ($this->definitions) {
+
+        if ($this->definitions && $this->getParent() === null) {
             foreach ($this->definitions as $name => $definition) {
                 $schema['$defs'][$name] = $definition->toJsonSchema();
             }
         }
 
         return $schema;
+    }
+
+    public static int $RECURSION_COUNT = 0;
+
+    public function toPhpType(bool $simple = false): string
+    {
+        if ($simple) {
+            return 'array';
+        }
+
+
+        $typeDef =  'array{';
+        self::$RECURSION_COUNT++;
+        $props = [];
+        foreach ($this->schema as $key => $type) {
+            $props[] = $key . ':' . $type->toPhpType(self::$RECURSION_COUNT > 10);
+        }
+        $typeDef .= implode(',', $props) . '}';
+        if ($this->isOptional()) {
+            $typeDef .= '|null';
+        }
+        self::$RECURSION_COUNT--;
+        return $typeDef;
     }
 
     protected function setParentsRecursively()
@@ -214,6 +296,7 @@ class VObject extends BaseType
         foreach ($this->definitions as $definition) {
             $definition->setParent($this);
             $definition->setParentsRecursively();
+            $this->hoistDefinitions();
         }
     }
 }

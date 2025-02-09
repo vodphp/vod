@@ -6,6 +6,7 @@ use Closure;
 use Illuminate\Support\Facades\Validator;
 use Spatie\TypeScriptTransformer\Structures\MissingSymbolsCollection;
 use Vod\Vod\Exceptions\VParseException;
+use Vod\Vod\Vod;
 
 /**
  * @template T
@@ -23,6 +24,8 @@ abstract class BaseType
     protected ?BaseType $parent = null;
 
     protected $default = null;
+
+    protected ?string $globalClassReference = null;
 
     protected ?string $description = null;
 
@@ -72,7 +75,7 @@ abstract class BaseType
             $message = '';
             foreach ($results['issues'] as $issue) {
                 [$code, $source, $msg] = $issue;
-                $message .= $msg.PHP_EOL;
+                $message .= $msg . PHP_EOL;
             }
             VParseException::throw($message, $this, $value);
         }
@@ -95,7 +98,26 @@ abstract class BaseType
         return new VArray($this);
     }
 
+
+
     abstract public function toTypeScript(MissingSymbolsCollection $collection): string;
+
+
+    public function toPhpType(bool $simple = false): string
+    {
+        return 'mixed';
+    }
+
+    public function exportTypeScript(MissingSymbolsCollection $collection): string
+    {
+
+        $ref = $this->globalClassReference;
+
+        if ($ref && $this->parent !== null) {
+            return str_replace('\\', '.', $ref);
+        }
+        return $this->toTypeScript($collection);
+    }
 
     /**
      * @return T
@@ -104,6 +126,7 @@ abstract class BaseType
     {
 
         $this->issues = [];
+
         if ($this->isOptional() && $value === null) {
             return [
                 'ok' => true,
@@ -112,6 +135,9 @@ abstract class BaseType
             ];
         }
         try {
+            if ($value instanceof Vod && !$this instanceof VVodClass && !$this instanceof VVod) {
+                $value = $value->value();
+            }
             $value = $this->parseValueForType($value, $this);
         } catch (VParseException $e) {
             if ($this->isOptional()) {
@@ -135,7 +161,7 @@ abstract class BaseType
             }
             if ($this->nestedRules) {
                 foreach ($this->nestedRules as $key => $nestedRules) {
-                    $preparedRules[$label.'.'.$key] = $nestedRules;
+                    $preparedRules[$label . '.' . $key] = $nestedRules;
                 }
             }
 
@@ -221,6 +247,18 @@ abstract class BaseType
     public function required()
     {
         $this->isOptional = false;
+
+        return $this;
+    }
+
+    /**
+     * 
+     * @param class-string $ref 
+     * @return self 
+     */
+    public function globalReference(string $ref): self
+    {
+        $this->globalClassReference = $ref;
 
         return $this;
     }

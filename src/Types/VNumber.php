@@ -33,6 +33,15 @@ class VNumber extends BaseType
         return $this;
     }
 
+    public function toPhpType(bool $simple = false): string
+    {
+        if ($this->isInt) {
+            return $this->isOptional() ? 'int|null' : 'int';
+        }
+
+        return $this->isOptional() ? 'float|null' : 'float';
+    }
+
     //protected $default = 0;
 
     public function parseValueForType($value, BaseType $context)

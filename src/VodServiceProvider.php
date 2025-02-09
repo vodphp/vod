@@ -4,6 +4,7 @@ namespace Vod\Vod;
 
 use Spatie\LaravelPackageTools\Package;
 use Spatie\LaravelPackageTools\PackageServiceProvider;
+use Vod\Vod\Commands\VodTransform;
 
 class VodServiceProvider extends PackageServiceProvider
 {
@@ -12,6 +13,9 @@ class VodServiceProvider extends PackageServiceProvider
 
         $package
             ->name('vod')
+            ->hasCommands([
+                VodTransform::class,
+            ])
             ->hasConfigFile();
     }
 }

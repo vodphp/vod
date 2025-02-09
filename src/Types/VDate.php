@@ -14,6 +14,11 @@ class VDate extends BaseType
 
     //protected $default = '';
 
+    public function toPhpType(bool $simple = false): string
+    {
+        return $this->isOptional() ? 'string|null' : 'string';
+    }
+
     public function parseValueForType($value, BaseType $context)
     {
         if (! is_int($value)) {

@@ -6,12 +6,16 @@ use Spatie\TypeScriptTransformer\Structures\MissingSymbolsCollection;
 
 class VTuple extends BaseType
 {
-    public function __construct(private array $types) {}
+    public function __construct(private array $types) {
+        foreach ($this->types as $type) {
+            $type->setParent($this);
+        }
+    }
 
     public function toTypeScript(MissingSymbolsCollection $collection): string
     {
         //derive tuple type from $this->types;
-        $types = array_map(fn ($type) => $type->toTypeScript($collection), $this->types);
+        $types = array_map(fn ($type) => $type->exportTypeScript($collection), $this->types);
 
         return '['.implode(', ', $types).']'.($this->isOptional() ? ' | null' : '');
     }
@@ -20,6 +24,15 @@ class VTuple extends BaseType
     {
         return $value;
     }
+
+    public function toPhpType(bool $simple = false): string
+    {
+        if ($simple) {
+            return 'array';
+        }
+        return 'array';
+    }
+
 
     protected function generateJsonSchema(): array
     {

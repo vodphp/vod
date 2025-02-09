@@ -2,6 +2,7 @@
 
 namespace Vod\Vod;
 
+use Illuminate\Support\Traits\Macroable;
 use Vod\Vod\Types\BaseType;
 use Vod\Vod\Types\VAny;
 use Vod\Vod\Types\VArray;
@@ -17,9 +18,14 @@ use Vod\Vod\Types\VRef;
 use Vod\Vod\Types\VString;
 use Vod\Vod\Types\VTuple;
 use Vod\Vod\Types\VUnion;
+use Vod\Vod\Types\VDeferred;
+use Vod\Vod\Types\VVod;
+use Vod\Vod\Types\VVodClass;
 
 class V
 {
+    use Macroable;
+    
     public function ref(string $name)
     {
         return new VRef($name);
@@ -28,6 +34,11 @@ class V
     public function string()
     {
         return new VString;
+    }
+
+    public function deferred(BaseType $type)
+    {
+        return new VDeferred($type);
     }
 
     public function dto(string $className)
@@ -100,9 +111,9 @@ class V
         return $this->object($inferredObject);
     }
 
-    public function union(array $types)
+    public function union(array $types, ?string $discriminatedOn = null)
     {
-        return new VUnion($types);
+        return new VUnion($types, $discriminatedOn);
     }
 
     public function allOf(array $types)
@@ -110,9 +121,9 @@ class V
         return $this->intersection($types);
     }
 
-    public function anyOf(array $types)
+    public function anyOf(array $types, ?string $discriminatedOn = null)
     {
-        return $this->union($types);
+        return $this->union($types, $discriminatedOn);
     }
 
     public function intersection(array $types)
@@ -123,6 +134,20 @@ class V
     public function object(array $schema)
     {
         return new VObject($schema);
+    }
+
+    /**
+     * @param class-string<Vod> $className
+     */
+    public function vod(string $className)
+    {
+        return new VVod($className);
+    }
+
+
+    public function vodClass()
+    {
+        return new VVodClass();
     }
 
     public function literal(string $value)
