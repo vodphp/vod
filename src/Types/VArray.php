@@ -2,6 +2,7 @@
 
 namespace Vod\Vod\Types;
 
+use Illuminate\Contracts\Support\Arrayable;
 use Spatie\TypeScriptTransformer\Structures\MissingSymbolsCollection;
 use Vod\Vod\Exceptions\VParseException;
 
@@ -37,6 +38,14 @@ class VArray extends BaseType
 
         if ($value === null) {
             return [];
+        }
+        
+        if (!is_array($value) && $value instanceof Arrayable) {
+            try {
+                $value = $value->toArray();
+            } catch (\Throwable $e) {
+                VParseException::throw('Value '.json_encode($value).' is not an array', $this, $value);
+            }
         }
 
         if (! is_array($value)) {
