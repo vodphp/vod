@@ -18,14 +18,14 @@ class ResolveClassesInPhpFileAction
 
     public function __construct()
     {
-        $this->parser = (new ParserFactory)->createForNewestSupportedVersion();
+        $this->parser = (new ParserFactory())->createForNewestSupportedVersion();
     }
 
     public function execute(SplFileInfo $file): array
     {
         $contents = $file->getContents();
-        // Big speed improvement - only parse files that contain the term Vod
-        if (! str($contents)->contains(['Vod'])) {
+        //Big speed improvement - only parse files that contain the term Vod
+        if (!str($contents)->contains(['Vod'])) {
             return [];
         }
         $statements = $this->parser->parse($contents);

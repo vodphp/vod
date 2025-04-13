@@ -37,6 +37,8 @@ it('VRef can be created', function () {
 
 });
 
+
+
 it('VRef can reference through an array', function () {
     $root = v()->object([
         'exampleOfRef' => v()->ref('ref01')->array(),
@@ -55,6 +57,7 @@ it('VRef can reference through an array', function () {
         ]],
     ]))->toBeArray()->toHaveLength(1);
 });
+
 
 it('VRef can be defined on any object in the chain', function () {
     $root = v()->object([

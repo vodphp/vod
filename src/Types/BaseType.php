@@ -19,6 +19,7 @@ abstract class BaseType
 
     protected array $after = [];
 
+
     protected array $issues = [];
 
     protected ?BaseType $parent = null;
@@ -29,6 +30,8 @@ abstract class BaseType
 
     protected ?string $description = null;
 
+    protected ?string $pathKey = null;
+
     protected bool $isOptional = false;
 
     abstract protected function parseValueForType(mixed $value, BaseType $context);
@@ -38,6 +41,25 @@ abstract class BaseType
         return is_null($this->default) ? null : $this->parse($this->default);
     }
 
+
+    public function getPathKey(): string
+    {
+        if (!$this->parent) {
+            return '';
+        }
+        return $this->pathKey ?? $this::class;
+    }
+
+    public function getSchemaPath(): string
+    {
+        $type = $this;
+        $path = [];
+        while ($type) {
+            $path[] = $type->getPathKey();
+            $type = $type->getParent();
+        }
+        return  ltrim(implode('.', array_reverse($path)), '.');
+    }
     /**
      * @param  BaseType[]  $types
      */
@@ -75,7 +97,7 @@ abstract class BaseType
             $message = '';
             foreach ($results['issues'] as $issue) {
                 [$code, $source, $msg] = $issue;
-                $message .= $msg.PHP_EOL;
+                $message .= $msg . PHP_EOL;
             }
             VParseException::throw($message, $this, $value);
         }
@@ -98,7 +120,10 @@ abstract class BaseType
         return new VArray($this);
     }
 
+
+
     abstract public function toTypeScript(MissingSymbolsCollection $collection): string;
+
 
     public function toPhpType(bool $simple = false): string
     {
@@ -113,12 +138,11 @@ abstract class BaseType
         if ($ref && $this->parent !== null) {
             return str_replace('\\', '.', $ref);
         }
-
         return $this->toTypeScript($collection);
     }
 
     /**
-     * @return T
+     * @return array{ok: boolean, value: T, issues: array<int, array{0: int, 1: BaseType, 2: string}>}
      */
     public function safeParse(mixed $value, string $label = 'value')
     {
@@ -133,7 +157,7 @@ abstract class BaseType
             ];
         }
         try {
-            if ($value instanceof Vod && ! $this instanceof VVodClass && ! $this instanceof VVod) {
+            if ($value instanceof Vod && !$this instanceof VVodClass && !$this instanceof VVod) {
                 $value = $value->value();
             }
             $value = $this->parseValueForType($value, $this);
@@ -159,7 +183,7 @@ abstract class BaseType
             }
             if ($this->nestedRules) {
                 foreach ($this->nestedRules as $key => $nestedRules) {
-                    $preparedRules[$label.'.'.$key] = $nestedRules;
+                    $preparedRules[$label . '.' . $key] = $nestedRules;
                 }
             }
 
@@ -204,7 +228,7 @@ abstract class BaseType
 
     public function rules($rules)
     {
-        // Check if is associative array
+        //Check if is associative array
         if (is_array($rules) && array_keys($rules) !== range(0, count($rules) - 1)) {
             $this->nestedRules = $rules;
 
@@ -213,7 +237,7 @@ abstract class BaseType
         if (is_string($rules)) {
             $rules = explode('|', $rules);
         }
-        // concat all rules
+        //concat all rules
         $this->rules = array_merge($this->rules, $rules);
 
         return $this;
@@ -250,7 +274,9 @@ abstract class BaseType
     }
 
     /**
-     * @param  class-string  $ref
+     * 
+     * @param class-string $ref 
+     * @return self 
      */
     public function globalReference(string $ref): self
     {
@@ -259,9 +285,12 @@ abstract class BaseType
         return $this;
     }
 
-    public function setParent(?BaseType $parent): self
+    public function setParent(?BaseType $parent, ?string $pathKey = null): self
     {
         $this->parent = $parent;
+        if ($pathKey !== null) {
+            $this->pathKey = $pathKey;
+        }
 
         return $this;
     }

@@ -2,7 +2,6 @@
 
 namespace Vod\Vod\Types;
 
-use Illuminate\Contracts\Support\Arrayable;
 use Spatie\TypeScriptTransformer\Structures\MissingSymbolsCollection;
 use Vod\Vod\Exceptions\VParseException;
 
@@ -18,7 +17,7 @@ class VArray extends BaseType
     public function __construct(BaseType $schema)
     {
         $this->schema = $schema;
-        $this->schema->setParent($this);
+        $this->schema->setParent($this, '[]');
     }
 
     public function empty()
@@ -40,38 +39,29 @@ class VArray extends BaseType
             return [];
         }
 
-        if (! is_array($value) && $value instanceof Arrayable) {
-            try {
-                $value = $value->toArray();
-            } catch (\Throwable $e) {
-                VParseException::throw('Value '.json_encode($value).' is not an array', $this, $value);
-            }
-        }
-
         if (! is_array($value)) {
-            VParseException::throw('Value '.json_encode($value).' is not an array', $this, $value);
+            VParseException::throw('Value ' . json_encode($value) . ' is not an array', $this, $value);
         }
 
-        return array_map(fn ($item) => $this->schema->parse($item), $value);
+        return array_map(fn($item) => $this->schema->parse($item), $value);
     }
 
     public function toPhpType(bool $simple = false): string
     {
         if ($simple) {
-            return 'array'.($this->isOptional() ? '|null' : '');
+            return 'array' . ($this->isOptional() ? '|null' : '');
         }
-
-        // return 'array<int,mixed>' . ($this->isOptional() ? '|null' : '');
-        return 'array<int,'.$this->schema->toPhpType().'>'.($this->isOptional() ? '|null' : '');
+        //return 'array<int,mixed>' . ($this->isOptional() ? '|null' : '');
+        return 'array<int,' . $this->schema->toPhpType() . '>' . ($this->isOptional() ? '|null' : '');
     }
 
     public function toTypeScript(MissingSymbolsCollection $missingSymbols): string
     {
         if ($this->schema instanceof VRef) {
-            return $this->schema->getName().'[]'.($this->isOptional() ? ' | null' : '');
+            return $this->schema->getName() . '[]' . ($this->isOptional() ? ' | null' : '');
         }
 
-        return $this->schema->exportTypeScript($missingSymbols).'[]'.($this->isOptional() ? ' | null' : '');
+        return $this->schema->exportTypeScript($missingSymbols) . '[]' . ($this->isOptional() ? ' | null' : '');
     }
 
     protected function generateJsonSchema(): array

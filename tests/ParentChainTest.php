@@ -50,11 +50,12 @@ it('sets parent chain when generating JSON schema', function () {
     expect($schema->getSchema()['hobbies']->getSchema()->getParent())->toBe($schema->getSchema()['hobbies']);
 });
 
+
 it('sets parent chain through a union', function () {
 
     $testSchema = v()->string();
 
-    $childSchema = v()->object([
+    $childSchema =  v()->object([
         'name' => v()->string(),
     ])->define('test', $testSchema);
     $schema = v()->union([

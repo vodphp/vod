@@ -5,6 +5,7 @@ use Vod\Vod\Vod;
 
 use function Vod\Vod\v;
 
+
 class SimpleForm extends Vod
 {
     public static function theme()

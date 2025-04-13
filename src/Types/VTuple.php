@@ -8,17 +8,17 @@ class VTuple extends BaseType
 {
     public function __construct(private array $types)
     {
-        foreach ($this->types as $type) {
-            $type->setParent($this);
+        foreach ($this->types as $key => $type) {
+            $type->setParent($this, $key);
         }
     }
 
     public function toTypeScript(MissingSymbolsCollection $collection): string
     {
-        // derive tuple type from $this->types;
-        $types = array_map(fn ($type) => $type->exportTypeScript($collection), $this->types);
+        //derive tuple type from $this->types;
+        $types = array_map(fn($type) => $type->exportTypeScript($collection), $this->types);
 
-        return '['.implode(', ', $types).']'.($this->isOptional() ? ' | null' : '');
+        return '[' . implode(', ', $types) . ']' . ($this->isOptional() ? ' | null' : '');
     }
 
     public function parseValueForType($value, BaseType $context)
@@ -31,15 +31,15 @@ class VTuple extends BaseType
         if ($simple) {
             return 'array';
         }
-
         return 'array';
     }
+
 
     protected function generateJsonSchema(): array
     {
         return [
             'type' => 'array',
-            'items' => array_map(fn (BaseType $type) => $type->toJsonSchema(), $this->types),
+            'items' => array_map(fn(BaseType $type) => $type->toJsonSchema(), $this->types),
             'minItems' => count($this->types),
             'maxItems' => count($this->types),
         ];

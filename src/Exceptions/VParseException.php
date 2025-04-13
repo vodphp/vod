@@ -13,10 +13,17 @@ class VParseException extends Exception
 
     public function __construct(string $message = 'Value is invalid', int $code = 0, ?\Throwable $previous = null, ?BaseType $type = null, mixed $value = null)
     {
+
+        $schemaPath = $type?->getSchemaPath();
+        if ($schemaPath) {
+            $message .= ' (' . $schemaPath . ')';
+        }
         parent::__construct($message, $code, $previous);
         $this->type = $type;
         $this->value = $value;
     }
+
+
 
     public static function throw(string $message, ?BaseType $type = null, mixed $value = null)
     {

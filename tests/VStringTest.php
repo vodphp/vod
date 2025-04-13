@@ -27,5 +27,5 @@ it('VString()', function () {
     expect((v()->string()->safeParse(new stdClass)['issues']))->toBeArray()->toHaveLength(1);
 
     expect(v()->string()->default('123')->optional()->parse(null))->toBe('123');
-    // expect(v()->string()->default('123')->toTypeScript(new MissingSymbolsCollection()))->toBe('string');
+    //expect(v()->string()->default('123')->toTypeScript(new MissingSymbolsCollection()))->toBe('string');
 });
