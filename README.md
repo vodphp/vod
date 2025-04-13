@@ -2,10 +2,10 @@
 
 Vod is a powerful PHP library for validating and defining object structures. It provides a fluent API for creating schemas, parsing data, and generating TypeScript definitions and JSON schemas.
 
-[![Latest Version on Packagist](https://img.shields.io/packagist/v/paperform-co/vod.svg?style=flat-square)](https://packagist.org/packages/paperform-co/vod)
-[![GitHub Tests Action Status](https://img.shields.io/github/actions/workflow/status/paperform-co/vod/run-tests.yml?branch=main&label=tests&style=flat-square)](https://github.com/paperform-co/vod/actions?query=workflow%3Arun-tests+branch%3Amain)
-[![GitHub Code Style Action Status](https://img.shields.io/github/actions/workflow/status/paperform-co/vod/fix-php-code-style-issues.yml?branch=main&label=code%20style&style=flat-square)](https://github.com/paperform-co/vod/actions?query=workflow%3A"Fix+PHP+code+style+issues"+branch%3Amain)
-[![Total Downloads](https://img.shields.io/packagist/dt/paperform-co/vod.svg?style=flat-square)](https://packagist.org/packages/paperform-co/vod)
+[![Latest Version on Packagist](https://img.shields.io/packagist/v/vod/vod.svg?style=flat-square)](https://packagist.org/packages/vod/vod)
+[![GitHub Tests Action Status](https://img.shields.io/github/actions/workflow/status/vod/vod/run-tests.yml?branch=main&label=tests&style=flat-square)](https://github.com/vod/vod/actions?query=workflow%3Arun-tests+branch%3Amain)
+[![GitHub Code Style Action Status](https://img.shields.io/github/actions/workflow/status/vod/vod/fix-php-code-style-issues.yml?branch=main&label=code%20style&style=flat-square)](https://github.com/vod/vod/actions?query=workflow%3A"Fix+PHP+code+style+issues"+branch%3Amain)
+[![Total Downloads](https://img.shields.io/packagist/dt/vod/vod.svg?style=flat-square)](https://packagist.org/packages/vod/vod)
 
 
 ## Installation
@@ -13,7 +13,7 @@ Vod is a powerful PHP library for validating and defining object structures. It 
 You can install Vod via Composer:
 
 ```bash
-composer require paperform-co/vod
+composer require vod/vod
 ```
 ## Testing
 
