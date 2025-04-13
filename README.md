@@ -3,8 +3,8 @@
 Vod is a powerful PHP library for validating and defining object structures. It provides a fluent API for creating schemas, parsing data, and generating TypeScript definitions and JSON schemas.
 
 [![Latest Version on Packagist](https://img.shields.io/packagist/v/vod/vod.svg?style=flat-square)](https://packagist.org/packages/vod/vod)
-[![GitHub Tests Action Status](https://img.shields.io/github/actions/workflow/status/vod/vod/run-tests.yml?branch=main&label=tests&style=flat-square)](https://github.com/vod/vod/actions?query=workflow%3Arun-tests+branch%3Amain)
-[![GitHub Code Style Action Status](https://img.shields.io/github/actions/workflow/status/vod/vod/fix-php-code-style-issues.yml?branch=main&label=code%20style&style=flat-square)](https://github.com/vod/vod/actions?query=workflow%3A"Fix+PHP+code+style+issues"+branch%3Amain)
+[![GitHub Tests Action Status](https://img.shields.io/github/actions/workflow/status/vod/vod/run-tests.yml?branch=main&label=tests&style=flat-square)](https://github.com/vodphp/vod/actions?query=workflow%3Arun-tests+branch%3Amain)
+[![GitHub Code Style Action Status](https://img.shields.io/github/actions/workflow/status/vod/vod/fix-php-code-style-issues.yml?branch=main&label=code%20style&style=flat-square)](https://github.com/vodphp/vod/actions?query=workflow%3A"Fix+PHP+code+style+issues"+branch%3Amain)
 [![Total Downloads](https://img.shields.io/packagist/dt/vod/vod.svg?style=flat-square)](https://packagist.org/packages/vod/vod)
 
 
