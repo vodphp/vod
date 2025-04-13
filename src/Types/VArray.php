@@ -39,8 +39,8 @@ class VArray extends BaseType
         if ($value === null) {
             return [];
         }
-        
-        if (!is_array($value) && $value instanceof Arrayable) {
+
+        if (! is_array($value) && $value instanceof Arrayable) {
             try {
                 $value = $value->toArray();
             } catch (\Throwable $e) {
