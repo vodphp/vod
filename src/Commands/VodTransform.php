@@ -30,27 +30,25 @@ class VodTransform extends Command
     {
         if (config('vod.output_stubs')) {
             File::ensureDirectoryExists(config('vod.output_stubs_location'));
-            //cleare the directory
+            // cleare the directory
             File::deleteDirectory(config('vod.output_stubs_location'));
             File::ensureDirectoryExists(config('vod.output_stubs_location'));
-            File::put(config('vod.output_stubs_location') . '/Vod.stub.php', '<?php ');
+            File::put(config('vod.output_stubs_location').'/Vod.stub.php', '<?php ');
         }
 
         if (config('vod.output_json_schema')) {
             File::ensureDirectoryExists(config('vod.output_json_schema_location'));
-            //clear the directory, except for the package.json
-            $packageJson = File::get(config('vod.output_json_schema_location') . '/package.json');
+            // clear the directory, except for the package.json
+            $packageJson = File::get(config('vod.output_json_schema_location').'/package.json');
             File::deleteDirectory(config('vod.output_json_schema_location'));
             File::ensureDirectoryExists(config('vod.output_json_schema_location'));
-            File::put(config('vod.output_json_schema_location') . '/package.json', $packageJson);
+            File::put(config('vod.output_json_schema_location').'/package.json', $packageJson);
         }
     }
 
-
-
     private static function appendToVodStub(string $content)
     {
-        File::append(config('vod.output_stubs_location') . '/Vod.stub.php', "\n" . $content . "\n");
+        File::append(config('vod.output_stubs_location').'/Vod.stub.php', "\n".$content."\n");
     }
 
     private function extractTypes(): void
@@ -61,15 +59,15 @@ class VodTransform extends Command
             if ($reflectionClass->isSubclassOf(Vod::class) && $reflectionClass->isInstantiable()) {
 
                 if (config('vod.output_stubs')) {
-                    $this->info('Writing stub for ' . $name);
+                    $this->info('Writing stub for '.$name);
                     self::appendToVodStub($reflectionClass->getName()::toStub());
                 }
 
                 if (config('vod.output_json_schema')) {
                     $schema = $reflectionClass->getName()::schema();
                     $fileName = str($name)->replace('\\', '.');
-                    $this->info('Writing schema for ' . $fileName);
-                    File::put(config('vod.output_json_schema_location') . '/' . $fileName . '.json', json_encode($schema->toJsonSchema(), JSON_PRETTY_PRINT));
+                    $this->info('Writing schema for '.$fileName);
+                    File::put(config('vod.output_json_schema_location').'/'.$fileName.'.json', json_encode($schema->toJsonSchema(), JSON_PRETTY_PRINT));
                 }
             }
         }
@@ -78,17 +76,16 @@ class VodTransform extends Command
     private function resolveIterator(array $paths): Generator
     {
         $paths = array_map(
-            fn(string $path) => is_dir($path) ? $path : dirname($path),
+            fn (string $path) => is_dir($path) ? $path : dirname($path),
             $paths
         );
 
-        $finder = new Finder();
+        $finder = new Finder;
         foreach ($finder->in($paths) as $fileInfo) {
             try {
 
-                $classes = (new ResolveClassesInPhpFileAction())->execute($fileInfo);
+                $classes = (new ResolveClassesInPhpFileAction)->execute($fileInfo);
                 foreach ($classes as $name) {
-
 
                     yield $name => new ReflectionClass($name);
                 }
@@ -97,6 +94,7 @@ class VodTransform extends Command
                 throw $exception;
             }
         }
+
         return $finder;
     }
 }

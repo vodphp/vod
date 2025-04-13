@@ -40,28 +40,29 @@ class VArray extends BaseType
         }
 
         if (! is_array($value)) {
-            VParseException::throw('Value ' . json_encode($value) . ' is not an array', $this, $value);
+            VParseException::throw('Value '.json_encode($value).' is not an array', $this, $value);
         }
 
-        return array_map(fn($item) => $this->schema->parse($item), $value);
+        return array_map(fn ($item) => $this->schema->parse($item), $value);
     }
 
     public function toPhpType(bool $simple = false): string
     {
         if ($simple) {
-            return 'array' . ($this->isOptional() ? '|null' : '');
+            return 'array'.($this->isOptional() ? '|null' : '');
         }
-        //return 'array<int,mixed>' . ($this->isOptional() ? '|null' : '');
-        return 'array<int,' . $this->schema->toPhpType() . '>' . ($this->isOptional() ? '|null' : '');
+
+        // return 'array<int,mixed>' . ($this->isOptional() ? '|null' : '');
+        return 'array<int,'.$this->schema->toPhpType().'>'.($this->isOptional() ? '|null' : '');
     }
 
     public function toTypeScript(MissingSymbolsCollection $missingSymbols): string
     {
         if ($this->schema instanceof VRef) {
-            return $this->schema->getName() . '[]' . ($this->isOptional() ? ' | null' : '');
+            return $this->schema->getName().'[]'.($this->isOptional() ? ' | null' : '');
         }
 
-        return $this->schema->exportTypeScript($missingSymbols) . '[]' . ($this->isOptional() ? ' | null' : '');
+        return $this->schema->exportTypeScript($missingSymbols).'[]'.($this->isOptional() ? ' | null' : '');
     }
 
     protected function generateJsonSchema(): array

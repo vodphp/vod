@@ -3,30 +3,25 @@
 namespace Vod\Vod\Types;
 
 use Spatie\TypeScriptTransformer\Structures\MissingSymbolsCollection;
-use Vod\Vod\Any;
 use Vod\Vod\Exceptions\VParseException;
 use Vod\Vod\Vod;
 
-use function Vod\Vod\v;
-
 /**
  * @template T of Vod
+ *
  * @extends BaseType<T>
  */
-
 class VVod extends BaseType
 {
-
     /**
-     * @param class-string<T> $className
+     * @param  class-string<T>  $className
      */
     public function __construct(
         protected string $className
     ) {
-        
+
         $this->globalClassReference = $className;
     }
-    
 
     private function schema(): BaseType
     {
@@ -34,8 +29,7 @@ class VVod extends BaseType
     }
 
     /**
-     * @param mixed $value
-     * @param BaseType $context
+     * @param  mixed  $value
      * @return T|Vod|class-string
      */
     public function parseValueForType($value, BaseType $context): Vod|string
@@ -44,8 +38,9 @@ class VVod extends BaseType
 
         if ($isVod) {
             if (! is_a($value, $this->className, true)) {
-                VParseException::throw('Value must be an instance of ' . $this->className, $this, $value);
+                VParseException::throw('Value must be an instance of '.$this->className, $this, $value);
             }
+
             return $value;
         }
 
@@ -64,7 +59,7 @@ class VVod extends BaseType
 
     public function toPhpType(bool $simple = false): string
     {
-        return "\\" .($this->globalClassReference ?? Vod::class);
+        return '\\'.($this->globalClassReference ?? Vod::class);
     }
 
     public function toJsonSchema(): array

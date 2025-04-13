@@ -20,23 +20,24 @@ class VLiteralMixed extends BaseType
             default => 'any'
         };
 
-        return $valueType . ($this->isOptional() ? ' | null' : '');
+        return $valueType.($this->isOptional() ? ' | null' : '');
     }
 
-    //protected $default = '';
+    // protected $default = '';
 
     public function toPhpType(bool $simple = false): string
     {
         if ($simple) {
             return $this->isOptional() ? 'string|null' : 'string';
         }
-        return  'mixed' . ($this->isOptional() ? '|null' : '');
+
+        return 'mixed'.($this->isOptional() ? '|null' : '');
     }
 
     public function parseValueForType($value, BaseType $context)
     {
         if ($value !== $this->value) {
-            VParseException::throw('Value ' . json_encode($value) . ' is not ' . $this->value, $context, $value);
+            VParseException::throw('Value '.json_encode($value).' is not '.$this->value, $context, $value);
         }
 
         return $value;
@@ -46,7 +47,6 @@ class VLiteralMixed extends BaseType
     {
         return $this->value;
     }
-
 
     protected function generateJsonSchema(): array
     {
@@ -58,6 +58,7 @@ class VLiteralMixed extends BaseType
             is_null($this->value) => 'null',
             default => 'any'
         };
+
         return [
             'type' => $type,
             'enum' => [$this->value],

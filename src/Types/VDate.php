@@ -12,7 +12,7 @@ class VDate extends BaseType
         return 'string'.($this->isOptional() ? ' | null' : '');
     }
 
-    //protected $default = '';
+    // protected $default = '';
 
     public function toPhpType(bool $simple = false): string
     {

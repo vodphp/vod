@@ -42,7 +42,7 @@ class VNumber extends BaseType
         return $this->isOptional() ? 'float|null' : 'float';
     }
 
-    //protected $default = 0;
+    // protected $default = 0;
 
     public function parseValueForType($value, BaseType $context)
     {

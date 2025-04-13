@@ -16,14 +16,12 @@ class VParseException extends Exception
 
         $schemaPath = $type?->getSchemaPath();
         if ($schemaPath) {
-            $message .= ' (' . $schemaPath . ')';
+            $message .= ' ('.$schemaPath.')';
         }
         parent::__construct($message, $code, $previous);
         $this->type = $type;
         $this->value = $value;
     }
-
-
 
     public static function throw(string $message, ?BaseType $type = null, mixed $value = null)
     {
