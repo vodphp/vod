@@ -1,7 +1,7 @@
 {
     "name": "vod/vod",
     "description": "vod, zod style validation for PHP",
-    "version": "0.0.1",
+    "version": "0.1.0",
     "keywords": [
         "vod",
         "vod-validation",
