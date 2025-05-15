@@ -47,7 +47,6 @@ class VDTO extends BaseType
 
     public function toTypeScript(MissingSymbolsCollection $collection): string
     {
-
         $dtoTransformer = new DtoTransformer(
             TypeScriptTransformerConfig::create(
             )
@@ -60,7 +59,6 @@ class VDTO extends BaseType
         }
 
         return $transformed->transformed;
-
     }
 
     public function parseValueForType($value, BaseType $context)

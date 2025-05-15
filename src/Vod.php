@@ -2,7 +2,9 @@
 
 namespace Vod\Vod;
 
+use ArrayAccess;
 use Illuminate\Contracts\Support\Arrayable;
+use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
 use JsonSerializable;
 use ReflectionClass;
@@ -14,7 +16,7 @@ use Vod\Vod\Types\VObject;
 /**
  * @implements Arrayable<array-key, mixed>
  */
-abstract class Vod implements Arrayable, JsonSerializable, Stringable
+abstract class Vod implements Arrayable, JsonSerializable, Stringable, ArrayAccess
 {
     private $cachedValue;
 
@@ -32,7 +34,6 @@ abstract class Vod implements Arrayable, JsonSerializable, Stringable
 
     public function __invoke(?string $name = null)
     {
-
         if (! $this->cachedValue) {
             $this->cachedValue = static::schema()->parse($this->input);
         }
@@ -43,6 +44,33 @@ abstract class Vod implements Arrayable, JsonSerializable, Stringable
         }
 
         return $value;
+    }
+
+
+    public function offsetExists(mixed $offset): bool
+    {
+        return isset($this->input[$offset]);
+    }
+
+    public function offsetGet(mixed $offset): mixed
+    {
+        return $this->__get($offset);
+    }
+
+    public function offsetSet(mixed $offset, mixed $value): void
+    {
+        $this->__set($offset, $value);
+    }
+
+    public function offsetUnset(mixed $offset): void
+    {
+        $this->__set($offset, null);
+    }
+
+
+    public static function fromRequest(Request $request): static
+    {
+        return new static($request->all());
     }
 
     public function raw()
@@ -84,7 +112,7 @@ abstract class Vod implements Arrayable, JsonSerializable, Stringable
         if (is_array($value)) {
             return $value;
         }
-        throw new \Exception('Expected array, got '.gettype($value));
+        throw new \Exception('Expected array, got ' . gettype($value));
     }
 
     public function defaults()
@@ -108,7 +136,7 @@ abstract class Vod implements Arrayable, JsonSerializable, Stringable
         if ($schema instanceof VEnum && $schema->parse($name)) {
             return new static($name);
         }
-        throw new \Exception('Invalid call to '.static::class.'::'.$name);
+        throw new \Exception('Invalid call to ' . static::class . '::' . $name);
     }
 
     /**
@@ -125,7 +153,6 @@ abstract class Vod implements Arrayable, JsonSerializable, Stringable
 
     public static function toStub()
     {
-
         $schema = static::schema();
         $reflector = new ReflectionClass(static::class);
         $name = $reflector->getName();
@@ -134,7 +161,7 @@ abstract class Vod implements Arrayable, JsonSerializable, Stringable
         $statics = [];
         if ($schema instanceof VEnum) {
             foreach ($schema->values() as $value) {
-                $statics[] = '  * @method static self '.$value.'()';
+                $statics[] = '  * @method static self ' . $value . '()';
             }
         }
         $statics = implode("\n", $statics);
@@ -142,7 +169,6 @@ abstract class Vod implements Arrayable, JsonSerializable, Stringable
         $fromArgsDocBlock = [];
         $fromArgs = [];
         if ($schema instanceof VObject) {
-
             $schemaProps = [];
             foreach ($schema->getSchema() as $name => $type) {
                 $schemaProps[] = [$name, $type];
@@ -152,14 +178,13 @@ abstract class Vod implements Arrayable, JsonSerializable, Stringable
                 return $a[1]->isOptional() - $b[1]->isOptional();
             });
             foreach ($schemaProps as [$name, $type]) {
-
-                $properties[] = '* @property '.$type->toPhpType().' $'.$name;
-                $fromArgsDocBlock[] = '* @param '.$type->toPhpType().' $'.$name;
-                $fromArgs[] = $type->toPhpType(simple: true).' $'.$name.($type->isOptional() ? ' = null' : '');
+                $properties[] = '* @property ' . $type->toPhpType() . ' $' . $name;
+                $fromArgsDocBlock[] = '* @param ' . $type->toPhpType() . ' $' . $name;
+                $fromArgs[] = $type->toPhpType(simple: true) . ' $' . $name . ($type->isOptional() ? ' = null' : '');
             }
         }
         if ($schema instanceof VEnum) {
-            $fromArgsDocBlock[] = '* @param '.$schema->toPhpType().' $value ';
+            $fromArgsDocBlock[] = '* @param ' . $schema->toPhpType() . ' $value ';
             $fromArgs[] = 'string $value';
         }
 

@@ -2,6 +2,7 @@
 
 namespace Vod\Vod\Types;
 
+use Illuminate\Contracts\Support\Arrayable;
 use Spatie\TypeScriptTransformer\Structures\MissingSymbolsCollection;
 use Vod\Vod\Exceptions\VParseException;
 
@@ -62,6 +63,18 @@ class VObject extends BaseType
         return $this->definitions;
     }
 
+    public function extend(array $schema): self
+    {
+        $schema = array_merge($this->schema, $schema);
+        return new self($schema);
+    }
+
+    public function omit(array $keys): self
+    {
+        $schema = array_diff_key($this->schema, array_flip($keys));
+        return new self($schema);
+    }
+
     public function literalProperties(): array
     {
         $properties = [];
@@ -78,7 +91,7 @@ class VObject extends BaseType
     {
         $parent = $this;
         while ($parent) {
-            if ($parent instanceof VObject) {
+            if ($parent instanceof self) {
                 if (isset($parent->getDefinitions()[$name])) {
                     return $parent->getDefinitions()[$name];
                 }
@@ -108,12 +121,12 @@ class VObject extends BaseType
         return $empty;
     }
 
-    private function getRootParent(): ?VObject
+    private function getRootParent(): ?self
     {
         $parent = $this;
         $parentObject = null;
         while ($parent) {
-            if ($parent instanceof VObject) {
+            if ($parent instanceof self) {
                 $parentObject = $parent;
             }
             $parent = $parent->getParent();
@@ -142,11 +155,11 @@ class VObject extends BaseType
             $ts .= "export type {$name} = ";
         }
 
-        $ts .= '{ '.implode('; ', $schema).'; }'.($this->isOptional() ? ' | null' : '');
+        $ts .= '{ ' . implode('; ', $schema) . '; }' . ($this->isOptional() ? ' | null' : '');
         // Only root object can have definitions
         if (! $this->getParent()) {
             foreach ($this->definitions as $name => $definition) {
-                $ts .= PHP_EOL."export type {$name} = {$definition->exportTypeScript($collection)};";
+                $ts .= PHP_EOL . "export type {$name} = {$definition->exportTypeScript($collection)};";
             }
         } else {
             $this->hoistDefinitions();
@@ -171,8 +184,11 @@ class VObject extends BaseType
     public function parseValueForType($value, BaseType $context)
     {
         $this->setParentsRecursively();
+        if (! is_array($value) && $value instanceof Arrayable) {
+            $value = $value->toArray();
+        }
         if (! is_array($value)) {
-            VParseException::throw('Value '.json_encode($value).' is not an object', $this, $value);
+            VParseException::throw('Value ' . json_encode($value) . ' is not an object', $this, $value);
 
             return;
         }
@@ -180,11 +196,11 @@ class VObject extends BaseType
         foreach ($this->schema as $key => $type) {
             // @phpstan-ignore-next-line
             if (! is_string($key)) {
-                VParseException::throw('Keys '.json_encode($key).' must be strings', $this, $value);
+                VParseException::throw('Keys ' . json_encode($key) . ' must be strings', $this, $value);
             }
             // @phpstan-ignore-next-line
             if (! ($type instanceof BaseType)) {
-                VParseException::throw('Schema values inherit from the BaseType, '.json_encode($type).' found', $this, $value);
+                VParseException::throw('Schema values inherit from the BaseType, ' . json_encode($type) . ' found', $this, $value);
             }
         }
         $parsedValue = [];
@@ -200,7 +216,6 @@ class VObject extends BaseType
             }
             $results = $type->safeParse($value[$key], $key);
             if (! $results['ok']) {
-
                 foreach ($results['issues'] as $issue) {
                     VParseException::throw($issue[2], $this, $value);
                 }
@@ -263,7 +278,6 @@ class VObject extends BaseType
 
     protected function addDescriptionToSchema(array $schema): array
     {
-
         $schema = parent::addDescriptionToSchema($schema);
 
         // Add descriptions to nested properties
@@ -293,16 +307,17 @@ class VObject extends BaseType
     public function toPhpType(bool $simple = false): string
     {
         if ($simple) {
-            return 'array';
+            return 'array|\\' . Arrayable::class;
         }
 
         $typeDef = 'array{';
         self::$RECURSION_COUNT++;
         $props = [];
         foreach ($this->schema as $key => $type) {
-            $props[] = $key.':'.$type->toPhpType(self::$RECURSION_COUNT > 10);
+            $props[] = $key . ':' . $type->toPhpType(self::$RECURSION_COUNT > 10);
         }
-        $typeDef .= implode(',', $props).'}';
+        $typeDef .= implode(',', $props) . '}';
+        $typeDef .= '|\\' . Arrayable::class;
         if ($this->isOptional()) {
             $typeDef .= '|null';
         }

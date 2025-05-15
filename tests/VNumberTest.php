@@ -9,9 +9,9 @@ it('VNumber()', function () {
     expect(v()->number())->toBeInstanceOf(VNumber::class);
     expect(v()->number()->optional()->int()->parse(123))->toBe(123);
     expect(v()->number()->optional()->parse(null))->toBeNull();
-    expect(v()->number()->optional()->int()->parse('123'))->toBe(null);
+    expect(v()->number()->optional()->int()->parse('123'))->toBe(123);
     expect(v()->number()->optional()->float()->parse(123.123))->toBe(123.123);
-    expect(v()->number()->optional()->int()->parse('123.123'))->toBe(null);
+    expect(v()->number()->optional()->int()->parse('123.123'))->toBe(123);
     expect(v()->number()->optional()->float()->parse(123))->toBe(123);
     expect(fn () => v()->number()->parse('123 adsa'))->toThrow(Exception::class);
     expect(fn () => v()->number()->parse([]))->toThrow(Exception::class);

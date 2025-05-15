@@ -67,7 +67,6 @@ class VArray extends BaseType
 
     protected function generateJsonSchema(): array
     {
-
         $schema = [
             'type' => 'array',
             'items' => $this->schema->toJsonSchema(),

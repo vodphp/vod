@@ -81,7 +81,6 @@ class V
         if (is_array($type)) {
             // is associative array?
             if (array_keys($type) !== range(0, count($type) - 1)) {
-
                 return $this->inferObject($type);
             }
 

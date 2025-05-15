@@ -14,7 +14,6 @@ class VRef extends BaseType
 
     public function getStore(): ?VObject
     {
-
         $parent = $this->getParent();
 
         while ($parent !== null) {

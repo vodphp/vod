@@ -33,7 +33,7 @@ abstract class BaseType
 
     protected bool $isOptional = false;
 
-    abstract protected function parseValueForType(mixed $value, BaseType $context);
+    abstract protected function parseValueForType(mixed $value, self $context);
 
     public function empty()
     {
@@ -130,7 +130,6 @@ abstract class BaseType
 
     public function exportTypeScript(MissingSymbolsCollection $collection): string
     {
-
         $ref = $this->globalClassReference;
 
         if ($ref && $this->parent !== null) {
@@ -145,7 +144,6 @@ abstract class BaseType
      */
     public function safeParse(mixed $value, string $label = 'value')
     {
-
         $this->issues = [];
 
         if ($this->isOptional() && $value === null) {
@@ -190,7 +188,6 @@ abstract class BaseType
 
             if ($validator->fails()) {
                 foreach ($validator->errors()->all() as $error) {
-
                     $this->addIssue(0, $this, $error);
                 }
             }
@@ -282,7 +279,7 @@ abstract class BaseType
         return $this;
     }
 
-    public function setParent(?BaseType $parent, ?string $pathKey = null): self
+    public function setParent(?self $parent, ?string $pathKey = null): self
     {
         $this->parent = $parent;
         if ($pathKey !== null) {
@@ -292,12 +289,12 @@ abstract class BaseType
         return $this;
     }
 
-    public function getParent(): ?BaseType
+    public function getParent(): ?self
     {
         return $this->parent;
     }
 
-    protected function addIssue(int $issueCode, BaseType $source, string $message)
+    protected function addIssue(int $issueCode, self $source, string $message)
     {
         $this->issues[] = [
             $issueCode,

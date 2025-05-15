@@ -11,7 +11,6 @@ class VLiteralMixed extends BaseType
 
     public function toTypeScript(MissingSymbolsCollection $collection): string
     {
-
         $valueType = match (true) {
             is_string($this->value) => "'$this->value'",
             is_numeric($this->value) => $this->value,
@@ -50,7 +49,6 @@ class VLiteralMixed extends BaseType
 
     protected function generateJsonSchema(): array
     {
-
         $type = match (true) {
             is_string($this->value) => 'string',
             is_numeric($this->value) => 'number',

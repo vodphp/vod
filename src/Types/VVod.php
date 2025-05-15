@@ -19,7 +19,6 @@ class VVod extends BaseType
     public function __construct(
         protected string $className
     ) {
-
         $this->globalClassReference = $className;
     }
 
@@ -38,7 +37,7 @@ class VVod extends BaseType
 
         if ($isVod) {
             if (! is_a($value, $this->className, true)) {
-                VParseException::throw('Value must be an instance of '.$this->className, $this, $value);
+                VParseException::throw('Value must be an instance of ' . $this->className, $this, $value);
             }
 
             return $value;
@@ -54,12 +53,12 @@ class VVod extends BaseType
 
     public function toTypeScript(MissingSymbolsCollection $collection): string
     {
-        return $this->schema()->toTypeScript($collection);
+        return $this->schema()->toTypeScript($collection) . ($this->isOptional() ? ' | null' : '');
     }
 
     public function toPhpType(bool $simple = false): string
     {
-        return '\\'.($this->globalClassReference ?? Vod::class);
+        return '\\' . ($this->globalClassReference ?? Vod::class) . ($this->isOptional() ? ' | null' : '');
     }
 
     public function toJsonSchema(): array
