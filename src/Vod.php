@@ -16,7 +16,7 @@ use Vod\Vod\Types\VObject;
 /**
  * @implements Arrayable<array-key, mixed>
  */
-abstract class Vod implements Arrayable, JsonSerializable, Stringable, ArrayAccess
+abstract class Vod implements Arrayable, ArrayAccess, JsonSerializable, Stringable
 {
     private $cachedValue;
 
@@ -46,7 +46,6 @@ abstract class Vod implements Arrayable, JsonSerializable, Stringable, ArrayAcce
         return $value;
     }
 
-
     public function offsetExists(mixed $offset): bool
     {
         return isset($this->input[$offset]);
@@ -66,7 +65,6 @@ abstract class Vod implements Arrayable, JsonSerializable, Stringable, ArrayAcce
     {
         $this->__set($offset, null);
     }
-
 
     public static function fromRequest(Request $request): static
     {
@@ -112,7 +110,7 @@ abstract class Vod implements Arrayable, JsonSerializable, Stringable, ArrayAcce
         if (is_array($value)) {
             return $value;
         }
-        throw new \Exception('Expected array, got ' . gettype($value));
+        throw new \Exception('Expected array, got '.gettype($value));
     }
 
     public function defaults()
@@ -136,7 +134,7 @@ abstract class Vod implements Arrayable, JsonSerializable, Stringable, ArrayAcce
         if ($schema instanceof VEnum && $schema->parse($name)) {
             return new static($name);
         }
-        throw new \Exception('Invalid call to ' . static::class . '::' . $name);
+        throw new \Exception('Invalid call to '.static::class.'::'.$name);
     }
 
     /**
@@ -161,7 +159,7 @@ abstract class Vod implements Arrayable, JsonSerializable, Stringable, ArrayAcce
         $statics = [];
         if ($schema instanceof VEnum) {
             foreach ($schema->values() as $value) {
-                $statics[] = '  * @method static self ' . $value . '()';
+                $statics[] = '  * @method static self '.$value.'()';
             }
         }
         $statics = implode("\n", $statics);
@@ -178,13 +176,13 @@ abstract class Vod implements Arrayable, JsonSerializable, Stringable, ArrayAcce
                 return $a[1]->isOptional() - $b[1]->isOptional();
             });
             foreach ($schemaProps as [$name, $type]) {
-                $properties[] = '* @property ' . $type->toPhpType() . ' $' . $name;
-                $fromArgsDocBlock[] = '* @param ' . $type->toPhpType() . ' $' . $name;
-                $fromArgs[] = $type->toPhpType(simple: true) . ' $' . $name . ($type->isOptional() ? ' = null' : '');
+                $properties[] = '* @property '.$type->toPhpType().' $'.$name;
+                $fromArgsDocBlock[] = '* @param '.$type->toPhpType().' $'.$name;
+                $fromArgs[] = $type->toPhpType(simple: true).' $'.$name.($type->isOptional() ? ' = null' : '');
             }
         }
         if ($schema instanceof VEnum) {
-            $fromArgsDocBlock[] = '* @param ' . $schema->toPhpType() . ' $value ';
+            $fromArgsDocBlock[] = '* @param '.$schema->toPhpType().' $value ';
             $fromArgs[] = 'string $value';
         }
 

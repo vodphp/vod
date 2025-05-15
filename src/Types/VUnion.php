@@ -19,6 +19,7 @@ class VUnion extends BaseType
     public function omit(array $types): self
     {
         $types = array_diff($this->types, $types);
+
         return new self($types);
     }
 
@@ -71,7 +72,7 @@ class VUnion extends BaseType
 
     public function toTypeScript(MissingSymbolsCollection $collection): string
     {
-        return '(' . implode(' | ', array_map(fn(BaseType $type) => $type->exportTypeScript($collection), $this->types)) . ')' . ($this->isOptional() ? ' | null' : '');
+        return '('.implode(' | ', array_map(fn (BaseType $type) => $type->exportTypeScript($collection), $this->types)).')'.($this->isOptional() ? ' | null' : '');
     }
 
     public function parseValueForType($value, BaseType $context)
@@ -96,12 +97,12 @@ class VUnion extends BaseType
                 continue;
             }
         }
-        VParseException::throw('Value ' . json_encode($value) . ' does not match any type in union', $context, $value);
+        VParseException::throw('Value '.json_encode($value).' does not match any type in union', $context, $value);
     }
 
     public function toPhpType(bool $simple = false): string
     {
-        return implode('|', array_unique(array_map(fn(BaseType $type) => $type->toPhpType(simple: $simple), $this->types))) . ($this->isOptional() ? '|null' : '');
+        return implode('|', array_unique(array_map(fn (BaseType $type) => $type->toPhpType(simple: $simple), $this->types))).($this->isOptional() ? '|null' : '');
     }
 
     protected function setParentsRecursively()
@@ -111,7 +112,7 @@ class VUnion extends BaseType
             if (! ($type instanceof BaseType)) {
                 throw new \Exception('Union type is not a BaseType, have you double wrapped an array?');
             }
-            $type->setParent($this, '|' . $key . '|');
+            $type->setParent($this, '|'.$key.'|');
             $type->setParentsRecursively();
         }
     }
@@ -119,7 +120,7 @@ class VUnion extends BaseType
     protected function generateJsonSchema(): array
     {
         return [
-            'oneOf' => array_map(fn(BaseType $type) => $type->toJsonSchema(), $this->types),
+            'oneOf' => array_map(fn (BaseType $type) => $type->toJsonSchema(), $this->types),
         ];
     }
 }

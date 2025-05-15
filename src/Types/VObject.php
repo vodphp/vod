@@ -66,12 +66,14 @@ class VObject extends BaseType
     public function extend(array $schema): self
     {
         $schema = array_merge($this->schema, $schema);
+
         return new self($schema);
     }
 
     public function omit(array $keys): self
     {
         $schema = array_diff_key($this->schema, array_flip($keys));
+
         return new self($schema);
     }
 
@@ -155,11 +157,11 @@ class VObject extends BaseType
             $ts .= "export type {$name} = ";
         }
 
-        $ts .= '{ ' . implode('; ', $schema) . '; }' . ($this->isOptional() ? ' | null' : '');
+        $ts .= '{ '.implode('; ', $schema).'; }'.($this->isOptional() ? ' | null' : '');
         // Only root object can have definitions
         if (! $this->getParent()) {
             foreach ($this->definitions as $name => $definition) {
-                $ts .= PHP_EOL . "export type {$name} = {$definition->exportTypeScript($collection)};";
+                $ts .= PHP_EOL."export type {$name} = {$definition->exportTypeScript($collection)};";
             }
         } else {
             $this->hoistDefinitions();
@@ -188,7 +190,7 @@ class VObject extends BaseType
             $value = $value->toArray();
         }
         if (! is_array($value)) {
-            VParseException::throw('Value ' . json_encode($value) . ' is not an object', $this, $value);
+            VParseException::throw('Value '.json_encode($value).' is not an object', $this, $value);
 
             return;
         }
@@ -196,11 +198,11 @@ class VObject extends BaseType
         foreach ($this->schema as $key => $type) {
             // @phpstan-ignore-next-line
             if (! is_string($key)) {
-                VParseException::throw('Keys ' . json_encode($key) . ' must be strings', $this, $value);
+                VParseException::throw('Keys '.json_encode($key).' must be strings', $this, $value);
             }
             // @phpstan-ignore-next-line
             if (! ($type instanceof BaseType)) {
-                VParseException::throw('Schema values inherit from the BaseType, ' . json_encode($type) . ' found', $this, $value);
+                VParseException::throw('Schema values inherit from the BaseType, '.json_encode($type).' found', $this, $value);
             }
         }
         $parsedValue = [];
@@ -307,17 +309,17 @@ class VObject extends BaseType
     public function toPhpType(bool $simple = false): string
     {
         if ($simple) {
-            return 'array|\\' . Arrayable::class;
+            return 'array|\\'.Arrayable::class;
         }
 
         $typeDef = 'array{';
         self::$RECURSION_COUNT++;
         $props = [];
         foreach ($this->schema as $key => $type) {
-            $props[] = $key . ':' . $type->toPhpType(self::$RECURSION_COUNT > 10);
+            $props[] = $key.':'.$type->toPhpType(self::$RECURSION_COUNT > 10);
         }
-        $typeDef .= implode(',', $props) . '}';
-        $typeDef .= '|\\' . Arrayable::class;
+        $typeDef .= implode(',', $props).'}';
+        $typeDef .= '|\\'.Arrayable::class;
         if ($this->isOptional()) {
             $typeDef .= '|null';
         }

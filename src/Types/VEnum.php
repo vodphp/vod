@@ -26,6 +26,7 @@ class VEnum extends BaseType
     public function omit(array $values): self
     {
         $values = array_diff($this->values, $values);
+
         return new self($values);
     }
 
@@ -37,7 +38,7 @@ class VEnum extends BaseType
             $valueAsString = $value;
         }
         if (! in_array($valueAsString, $this->values, true)) {
-            VParseException::throw('Value ' . json_encode($valueAsString) . ' is not a valid enum member', $this, $value);
+            VParseException::throw('Value '.json_encode($valueAsString).' is not a valid enum member', $this, $value);
         }
 
         return $valueAsString;
@@ -46,12 +47,12 @@ class VEnum extends BaseType
     public function toPhpType(bool $simple = false): string
     {
         if ($simple) {
-            return 'string' . ($this->isOptional() ? '|null' : '');
+            return 'string'.($this->isOptional() ? '|null' : '');
         }
 
         return implode('|', array_map(function ($value) {
             return "\"{$value}\"";
-        }, $this->values)) . ($this->isOptional() ? '|null' : '');
+        }, $this->values)).($this->isOptional() ? '|null' : '');
     }
 
     public function toTypeScript(MissingSymbolsCollection $collection): string
@@ -67,7 +68,7 @@ class VEnum extends BaseType
             return $value;
         }, $this->values);
 
-        return implode(' | ', $values) . ($this->isOptional() ? ' | null' : '');
+        return implode(' | ', $values).($this->isOptional() ? ' | null' : '');
     }
 
     protected function generateJsonSchema(): array

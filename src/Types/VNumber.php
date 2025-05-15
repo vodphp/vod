@@ -14,7 +14,7 @@ class VNumber extends BaseType
 
     public function toTypeScript(MissingSymbolsCollection $collection): string
     {
-        return 'number' . ($this->isOptional() ? ' | null' : '');
+        return 'number'.($this->isOptional() ? ' | null' : '');
     }
 
     public function int(): self
@@ -48,7 +48,7 @@ class VNumber extends BaseType
     {
 
         if (! is_numeric($value)) {
-            VParseException::throw('Value ' . json_encode($value) . ' is not a number', $context, $value);
+            VParseException::throw('Value '.json_encode($value).' is not a number', $context, $value);
         }
 
         if (is_string($value)) {
@@ -60,8 +60,8 @@ class VNumber extends BaseType
                 return (int) $value;
             }
         }
-        //If the value is an integer, return an integer
-        if ((float)(int) $value === (float) $value) {
+        // If the value is an integer, return an integer
+        if ((float) (int) $value === (float) $value) {
             return (int) $value;
         }
 

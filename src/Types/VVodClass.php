@@ -4,10 +4,9 @@ namespace Vod\Vod\Types;
 
 use Spatie\TypeScriptTransformer\Structures\MissingSymbolsCollection;
 use Vod\Vod\Exceptions\VParseException;
+use Vod\Vod\Vod;
 
 use function Vod\Vod\v;
-
-use Vod\Vod\Vod;
 
 /**
  * @template T of Vod

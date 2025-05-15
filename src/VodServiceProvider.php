@@ -25,7 +25,7 @@ class VodServiceProvider extends PackageServiceProvider
             if ($app->has($class)) {
                 return;
             }
-            $app->bind($class, fn($container) => $class::fromRequest($container['request']));
+            $app->bind($class, fn ($container) => $class::fromRequest($container['request']));
         });
     }
 }
